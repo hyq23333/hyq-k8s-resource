@@ -1,0 +1,29 @@
+couldn't get current server API group list: Get "http://localhost:8080/api?timeout=32s": dial tcp 127.0.0.1:8080: connect: connection refused
+
+
+couldn't get resource list for metrics.k8s.io/v1beta1: the server is currently unable to handle the request
+
+Error from server: Get "https://172.31.22.140:10250/containerLogs/hono/eclipse-hono-adapter-http-565dff968c-cd8tj/adapter-http": dial tcp 172.31.22.140:10250: i/o timeout
+
+
+kubectl get apiservice
+
+kubectl describe apiservice v1beta1.metrics.k8s.io
+
+
+
+Make sure that the default network security group isn't modified and that both port 22 and 9000 are open for connection to the API server.
+Check whether the tunnelfront pod is running in the kube-system namespace using the kubectl get pods --namespace kube-system command.
+If it isn't, force deletion of the pod and it will restart.
+
+
+
+I forgot to open port 10250 (tcp) (in my aws security group). This was the only issue for me.
+
+
+
+	at java.base/java.lang.reflect.Method.invoke(Unknown Source)
+	at io.quarkus.bootstrap.runner.QuarkusEntryPoint.doRun(QuarkusEntryPoint.java:61)
+	at io.quarkus.bootstrap.runner.QuarkusEntryPoint.main(QuarkusEntryPoint.java:32)
+2023-09-19T07:25:50.397729492Z
+

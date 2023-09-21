@@ -1,0 +1,1692 @@
+---
+# Source: hono/templates/hono-service-command-router/hono-service-command-router-sa.yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: "eclipse-hono-service-command-router"
+  namespace: "hono"
+  labels:
+    app.kubernetes.io/name: "hono"
+    helm.sh/chart: "hono-2.5.1"
+    app.kubernetes.io/managed-by: "Helm"
+    app.kubernetes.io/instance: "eclipse-hono"
+    app.kubernetes.io/version: "2.4.0"
+---
+# Source: hono/templates/hono-adapter-http/hono-adapter-http-secret.yaml
+#
+# Copyright (c) 2019, 2023 Contributors to the Eclipse Foundation
+#
+# See the NOTICE file(s) distributed with this work for additional
+# information regarding copyright ownership.
+#
+# This program and the accompanying materials are made available under the
+# terms of the Eclipse Public License 2.0 which is available at
+# http://www.eclipse.org/legal/epl-2.0
+#
+# SPDX-License-Identifier: EPL-2.0
+#
+apiVersion: v1
+kind: Secret
+metadata:
+  name: "eclipse-hono-adapter-http-conf"
+  namespace: "hono"
+  labels:
+    app.kubernetes.io/name: "hono"
+    helm.sh/chart: "hono-2.5.1"
+    app.kubernetes.io/managed-by: "Helm"
+    app.kubernetes.io/instance: "eclipse-hono"
+    app.kubernetes.io/version: "2.4.0"
+    app.kubernetes.io/component: "adapter-http"
+type: Opaque
+stringData:
+  application.yml: |
+    hono:
+      app:
+        maxInstances: 1
+      http:
+        insecurePortBindAddress: 0.0.0.0
+        insecurePortEnabled: true
+      
+      kafka:
+        command:
+          consumerConfig:
+            compression.type: none
+        commandInternal:
+          adminClientConfig:
+            compression.type: none
+        commandResponse:
+          producerConfig:
+            compression.type: none
+        commonClientConfig:
+          bootstrap.servers: hono-kafka-broker.hono:9092
+        event:
+          producerConfig:
+            compression.type: none
+        notification:
+          consumerConfig:
+            compression.type: none
+        telemetry:
+          producerConfig:
+            compression.type: none
+      tenant:
+        host: eclipse-hono-service-device-registry
+        hostnameVerificationRequired: false
+        port: 5672
+      registration:
+        host: eclipse-hono-service-device-registry
+        hostnameVerificationRequired: false
+        port: 5672
+      credentials:
+        host: eclipse-hono-service-device-registry
+        hostnameVerificationRequired: false
+        port: 5672
+      commandRouter:
+        
+        host: eclipse-hono-service-command-router
+        hostnameVerificationRequired: false
+        port: 5672    
+    quarkus:
+      console:
+        color: false
+      log:
+        min-level: TRACE
+        level: INFO
+        category:
+          "io.quarkus.vertx.core.runtime":
+            level: DEBUG
+      vertx:
+        prefer-native-transport: true
+        resolver:
+          cache-max-time-to-live: 0
+data:
+  adapter.credentials: dXNlcm5hbWU9aHR0cC1hZGFwdGVyQEhPTk8KcGFzc3dvcmQ9aHR0cC1zZWNyZXQK
+---
+# Source: hono/templates/hono-service-auth/hono-service-auth-example-keys.yaml
+#
+# Copyright (c) 2022 Contributors to the Eclipse Foundation
+#
+# See the NOTICE file(s) distributed with this work for additional
+# information regarding copyright ownership.
+#
+# This program and the accompanying materials are made available under the
+# terms of the Eclipse Public License 2.0 which is available at
+# http://www.eclipse.org/legal/epl-2.0
+#
+# SPDX-License-Identifier: EPL-2.0
+#
+apiVersion: v1
+kind: Secret
+metadata:
+  name: "eclipse-hono-service-auth-example-keys"
+  namespace: "hono"
+  labels:
+    app.kubernetes.io/name: "hono"
+    helm.sh/chart: "hono-2.5.1"
+    app.kubernetes.io/managed-by: "Helm"
+    app.kubernetes.io/instance: "eclipse-hono"
+    app.kubernetes.io/version: "2.4.0"
+    app.kubernetes.io/component: "service-auth"
+type: Opaque
+data:
+  tls.key: LS0tLS1CRUdJTiBQUklWQVRFIEtFWS0tLS0tCk1JR0hBZ0VBTUJNR0J5cUdTTTQ5QWdFR0NDcUdTTTQ5QXdFSEJHMHdhd0lCQVFRZ3Zxa2cveDYxOFZLZHdmWVoKNUhkYm1KNk5rdDlRREkvY0lxT3V2OWtIQm5TaFJBTkNBQVNOYmNKYmVEM04zR1Jhem93MVBWYm1lcFAycEJESgpwQTdweUhIbk9lTkxVZjh3QThTcHZIWC9RbDFwQVp4YjBEaGw1ZXIwZnJWcmhuNDJJZmQ1cmp1WgotLS0tLUVORCBQUklWQVRFIEtFWS0tLS0tCg==
+  tls.crt: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUNPakNDQWVHZ0F3SUJBZ0lVQjJ2eFdJOXdqMzJPSExhQUJWVitpdVZrZFNzd0NnWUlLb1pJemowRUF3SXcKVURFTE1Ba0dBMVVFQmhNQ1EwRXhEekFOQmdOVkJBY01CazkwZEdGM1lURVVNQklHQTFVRUNnd0xSV05zYVhCegpaU0JKYjFReERUQUxCZ05WQkFzTUJFaHZibTh4Q3pBSkJnTlZCQU1NQW1OaE1CNFhEVEl6TURZeU5EQTVNRFl3Ck1Gb1hEVEkwTURZeU16QTVNRFl3TUZvd1dURUxNQWtHQTFVRUJoTUNRMEV4RHpBTkJnTlZCQWNNQms5MGRHRjMKWVRFVU1CSUdBMVVFQ2d3TFJXTnNhWEJ6WlNCSmIxUXhEVEFMQmdOVkJBc01CRWh2Ym04eEZEQVNCZ05WQkFNTQpDMkYxZEdndGMyVnlkbVZ5TUZrd0V3WUhLb1pJemowQ0FRWUlLb1pJemowREFRY0RRZ0FFalczQ1czZzl6ZHhrCldzNk1OVDFXNW5xVDlxUVF5YVFPNmNoeDV6bmpTMUgvTUFQRXFieDEvMEpkYVFHY1c5QTRaZVhxOUg2MWE0WisKTmlIM2VhNDdtYU9CanpDQmpEQWRCZ05WSFE0RUZnUVVtZkJ0Y293czZrekNCaVBORDZjbmxVN1F5QkV3Q3dZRApWUjBQQkFRREFnT29NQjBHQTFVZEpRUVdNQlFHQ0NzR0FRVUZCd01CQmdnckJnRUZCUWNEQWpBL0JnTlZIUkVFCk9EQTJnaEZvYjI1dkxYTmxjblpwWTJVdFlYVjBhSUlXYUc5dWJ5MXpaWEoyYVdObExXRjFkR2d1YUc5dWI0SUoKYkc5allXeG9iM04wTUFvR0NDcUdTTTQ5QkFNQ0EwY0FNRVFDSUN1RG9oaHdFRG1nc3J6Vld2T2JVNElaTjEwZApMYU4wTmI1QzI1RVo2TmNXQWlCeFJzbTRTQ0YyK3F2OHBSRGZCZkhQZCtPMGxRWm8xMWhuRng0SWxaYUZ0QT09Ci0tLS0tRU5EIENFUlRJRklDQVRFLS0tLS0KLS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUI0ekNDQVltZ0F3SUJBZ0lVRHZmc2V2SHBGN09iUmVBQW1HWFhISHNBWEQwd0NnWUlLb1pJemowRUF3SXcKVWpFTE1Ba0dBMVVFQmhNQ1EwRXhEekFOQmdOVkJBY01CazkwZEdGM1lURVVNQklHQTFVRUNnd0xSV05zYVhCegpaU0JKYjFReERUQUxCZ05WQkFzTUJFaHZibTh4RFRBTEJnTlZCQU1NQkhKdmIzUXdIaGNOTWpNd05qSTBNRGt3Ck5qQXdXaGNOTWpRd05qSXpNRGt3TmpBd1dqQlFNUXN3Q1FZRFZRUUdFd0pEUVRFUE1BMEdBMVVFQnd3R1QzUjAKWVhkaE1SUXdFZ1lEVlFRS0RBdEZZMnhwY0hObElFbHZWREVOTUFzR0ExVUVDd3dFU0c5dWJ6RUxNQWtHQTFVRQpBd3dDWTJFd1dUQVRCZ2NxaGtqT1BRSUJCZ2dxaGtqT1BRTUJCd05DQUFRcGhvVjdaSlpnNzFWUmxkNjZQS2lXCk1IWWF0Zkw3MS94dWdoaFNzSGZlNEdZTkE2aDlwejZRYjBlOWg4S2o2dExURk5UaHZaMEU1MDJveTZlL0E1dHEKb3o4d1BUQWRCZ05WSFE0RUZnUVViQXlSUkNVM1lDcDdacTFUYkdlVy9mYWdxSEV3RHdZRFZSMFRBUUgvQkFVdwpBd0VCL3pBTEJnTlZIUThFQkFNQ0FRWXdDZ1lJS29aSXpqMEVBd0lEU0FBd1JRSWhBSmFxVXU0UVNMSzNwd0NkCk5MbXJLSG9sNmRYcWFLU29GVUtZVmRBU3NGc1JBaUJ2WDhYSElkUmsvQWVrY0RYNEFlakRnMVc1RWJ2UDVyMXQKS2lFc1YxbDFUdz09Ci0tLS0tRU5EIENFUlRJRklDQVRFLS0tLS0K
+---
+# Source: hono/templates/hono-service-auth/hono-service-auth-secret.yaml
+#
+# Copyright (c) 2019, 2023 Contributors to the Eclipse Foundation
+#
+# See the NOTICE file(s) distributed with this work for additional
+# information regarding copyright ownership.
+#
+# This program and the accompanying materials are made available under the
+# terms of the Eclipse Public License 2.0 which is available at
+# http://www.eclipse.org/legal/epl-2.0
+#
+# SPDX-License-Identifier: EPL-2.0
+#
+apiVersion: v1
+kind: Secret
+metadata:
+  name: "eclipse-hono-service-auth-conf"
+  namespace: "hono"
+  labels:
+    app.kubernetes.io/name: "hono"
+    helm.sh/chart: "hono-2.5.1"
+    app.kubernetes.io/managed-by: "Helm"
+    app.kubernetes.io/instance: "eclipse-hono"
+    app.kubernetes.io/version: "2.4.0"
+    app.kubernetes.io/component: "service-auth"
+type: Opaque
+stringData:
+  application.yml: |
+    hono:
+      app:
+        maxInstances: 1
+      auth:
+        amqp:
+          bindAddress: "0.0.0.0"
+          keyPath: "/opt/hono/tls/tls.key"
+          certPath: "/opt/hono/tls/tls.crt"
+        svc:
+          permissionsPath: file:///opt/hono/config/permissions.json
+          signing:
+            tokenExpiration: 3600
+          supportedSaslMechanisms: PLAIN    
+    quarkus:
+      console:
+        color: false
+      log:
+        min-level: TRACE
+        level: INFO
+        category:
+          "io.quarkus.vertx.core.runtime":
+            level: DEBUG
+      vertx:
+        prefer-native-transport: true
+        resolver:
+          cache-max-time-to-live: 0
+data:
+  permissions.json: ewogICJyb2xlcyI6IHsKICAgICJwcm90b2NvbC1hZGFwdGVyIjogWwogICAgICB7CiAgICAgICAgInJlc291cmNlIjogInRlbGVtZXRyeS8qIiwKICAgICAgICAiYWN0aXZpdGllcyI6IFsgIldSSVRFIiBdCiAgICAgIH0sCiAgICAgIHsKICAgICAgICAicmVzb3VyY2UiOiAiZXZlbnQvKiIsCiAgICAgICAgImFjdGl2aXRpZXMiOiBbICJXUklURSIgXQogICAgICB9LAogICAgICB7CiAgICAgICAgInJlc291cmNlIjogInJlZ2lzdHJhdGlvbi8qIiwKICAgICAgICAiYWN0aXZpdGllcyI6IFsgIlJFQUQiLCAiV1JJVEUiIF0KICAgICAgfSwKICAgICAgewogICAgICAgICJvcGVyYXRpb24iOiAicmVnaXN0cmF0aW9uLyo6YXNzZXJ0IiwKICAgICAgICAiYWN0aXZpdGllcyI6IFsgIkVYRUNVVEUiIF0KICAgICAgfSwKICAgICAgewogICAgICAgICJvcGVyYXRpb24iOiAicmVnaXN0cmF0aW9uLyo6Z2V0IiwKICAgICAgICAiYWN0aXZpdGllcyI6IFsgIkVYRUNVVEUiIF0KICAgICAgfSwKICAgICAgewogICAgICAgICJyZXNvdXJjZSI6ICJjcmVkZW50aWFscy8qIiwKICAgICAgICAiYWN0aXZpdGllcyI6IFsgIlJFQUQiLCAiV1JJVEUiIF0KICAgICAgfSwKICAgICAgewogICAgICAgICJvcGVyYXRpb24iOiAiY3JlZGVudGlhbHMvKjpnZXQiLAogICAgICAgICJhY3Rpdml0aWVzIjogWyAiRVhFQ1VURSIgXQogICAgICB9LAogICAgICB7CiAgICAgICAgInJlc291cmNlIjogInRlbmFudCIsCiAgICAgICAgImFjdGl2aXRpZXMiOiBbICJSRUFEIiwgIldSSVRFIiBdCiAgICAgIH0sCiAgICAgIHsKICAgICAgICAib3BlcmF0aW9uIjogInRlbmFudC8qOioiLAogICAgICAgICJhY3Rpdml0aWVzIjogWyAiRVhFQ1VURSIgXQogICAgICB9LAogICAgICB7CiAgICAgICAgInJlc291cmNlIjogImNtZF9yb3V0ZXIvKiIsCiAgICAgICAgImFjdGl2aXRpZXMiOiBbICJSRUFEIiwgIldSSVRFIiBdCiAgICAgIH0sCiAgICAgIHsKICAgICAgICAib3BlcmF0aW9uIjogImNtZF9yb3V0ZXIvKjoqIiwKICAgICAgICAiYWN0aXZpdGllcyI6IFsgIkVYRUNVVEUiIF0KICAgICAgfSwKICAgICAgewogICAgICAgICJyZXNvdXJjZSI6ICJkZXZpY2VfY29uLyoiLAogICAgICAgICJhY3Rpdml0aWVzIjogWyAiUkVBRCIsICJXUklURSIgXQogICAgICB9LAogICAgICB7CiAgICAgICAgIm9wZXJhdGlvbiI6ICJkZXZpY2VfY29uLyo6KiIsCiAgICAgICAgImFjdGl2aXRpZXMiOiBbICJFWEVDVVRFIiBdCiAgICAgIH0KICAgIF0sCiAgICAiY29tbWFuZC1yb3V0ZXIiOiBbCiAgICAgIHsKICAgICAgICAicmVzb3VyY2UiOiAidGVuYW50IiwKICAgICAgICAiYWN0aXZpdGllcyI6IFsgIlJFQUQiLCAiV1JJVEUiIF0KICAgICAgfSwKICAgICAgewogICAgICAgICJvcGVyYXRpb24iOiAidGVuYW50Lyo6KiIsCiAgICAgICAgImFjdGl2aXRpZXMiOiBbICJFWEVDVVRFIiBdCiAgICAgIH0sCiAgICAgIHsKICAgICAgICAicmVzb3VyY2UiOiAicmVnaXN0cmF0aW9uLyoiLAogICAgICAgICJhY3Rpdml0aWVzIjogWyAiUkVBRCIsICJXUklURSIgXQogICAgICB9LAogICAgICB7CiAgICAgICAgIm9wZXJhdGlvbiI6ICJyZWdpc3RyYXRpb24vKjoqIiwKICAgICAgICAiYWN0aXZpdGllcyI6IFsgIkVYRUNVVEUiIF0KICAgICAgfQogICAgXSwKICAgICJkZXZpY2UtbWFuYWdlciI6IFsKICAgICAgewogICAgICAgICJyZXNvdXJjZSI6ICJyZWdpc3RyYXRpb24vKiIsCiAgICAgICAgImFjdGl2aXRpZXMiOiBbICJSRUFEIiwgIldSSVRFIiBdCiAgICAgIH0sCiAgICAgIHsKICAgICAgICAib3BlcmF0aW9uIjogInJlZ2lzdHJhdGlvbi8qOioiLAogICAgICAgICJhY3Rpdml0aWVzIjogWyAiRVhFQ1VURSIgXQogICAgICB9CiAgICBdLAogICAgImFwcGxpY2F0aW9uIjogWwogICAgICB7CiAgICAgICAgInJlc291cmNlIjogInRlbGVtZXRyeS8qIiwKICAgICAgICAiYWN0aXZpdGllcyI6IFsgIlJFQUQiIF0KICAgICAgfSwKICAgICAgewogICAgICAgICJyZXNvdXJjZSI6ICJldmVudC8qIiwKICAgICAgICAiYWN0aXZpdGllcyI6IFsgIlJFQUQiIF0KICAgICAgfSwKICAgICAgewogICAgICAgICJyZXNvdXJjZSI6ICJjb250cm9sLyoiLAogICAgICAgICJhY3Rpdml0aWVzIjogWyAiUkVBRCIsICJXUklURSIgXQogICAgICB9LAogICAgICB7CiAgICAgICAgInJlc291cmNlIjogImNvbW1hbmQvKiIsCiAgICAgICAgImFjdGl2aXRpZXMiOiBbICJXUklURSIgXQogICAgICB9LAogICAgICB7CiAgICAgICAgInJlc291cmNlIjogImNvbW1hbmRfcmVzcG9uc2UvKiIsCiAgICAgICAgImFjdGl2aXRpZXMiOiBbICJSRUFEIiBdCiAgICAgIH0KICAgIF0KICB9LAogICJ1c2VycyI6IHsKICAgICJjb2FwLWFkYXB0ZXJASE9OTyI6IHsKICAgICAgIm1lY2hhbmlzbSI6ICJQTEFJTiIsCiAgICAgICJwYXNzd29yZCI6ICJjb2FwLXNlY3JldCIsCiAgICAgICJhdXRob3JpdGllcyI6IFsgImhvbm8tY29tcG9uZW50IiwgInByb3RvY29sLWFkYXB0ZXIiIF0KICAgIH0sCiAgICAiaHR0cC1hZGFwdGVyQEhPTk8iOiB7CiAgICAgICJtZWNoYW5pc20iOiAiUExBSU4iLAogICAgICAicGFzc3dvcmQiOiAiaHR0cC1zZWNyZXQiLAogICAgICAiYXV0aG9yaXRpZXMiOiBbICJob25vLWNvbXBvbmVudCIsICJwcm90b2NvbC1hZGFwdGVyIiBdCiAgICB9LAogICAgImxvcmEtYWRhcHRlckBIT05PIjogewogICAgICAibWVjaGFuaXNtIjogIlBMQUlOIiwKICAgICAgInBhc3N3b3JkIjogImxvcmEtc2VjcmV0IiwKICAgICAgImF1dGhvcml0aWVzIjogWyAiaG9uby1jb21wb25lbnQiLCAicHJvdG9jb2wtYWRhcHRlciIgXQogICAgfSwKICAgICJtcXR0LWFkYXB0ZXJASE9OTyI6IHsKICAgICAgIm1lY2hhbmlzbSI6ICJQTEFJTiIsCiAgICAgICJwYXNzd29yZCI6ICJtcXR0LXNlY3JldCIsCiAgICAgICJhdXRob3JpdGllcyI6IFsgImhvbm8tY29tcG9uZW50IiwgInByb3RvY29sLWFkYXB0ZXIiIF0KICAgIH0sCiAgICAiYW1xcC1hZGFwdGVyQEhPTk8iOiB7CiAgICAgICJtZWNoYW5pc20iOiAiUExBSU4iLAogICAgICAicGFzc3dvcmQiOiAiYW1xcC1zZWNyZXQiLAogICAgICAiYXV0aG9yaXRpZXMiOiBbICJob25vLWNvbXBvbmVudCIsICJwcm90b2NvbC1hZGFwdGVyIiBdCiAgICB9LAogICAgImNvbW1hbmQtcm91dGVyQEhPTk8iOiB7CiAgICAgICJtZWNoYW5pc20iOiAiUExBSU4iLAogICAgICAicGFzc3dvcmQiOiAiY21kLXJvdXRlci1zZWNyZXQiLAogICAgICAiYXV0aG9yaXRpZXMiOiBbICJob25vLWNvbXBvbmVudCIsICJjb21tYW5kLXJvdXRlciIgXQogICAgfSwKICAgICJob25vLWNsaWVudEBIT05PIjogewogICAgICAibWVjaGFuaXNtIjogIlBMQUlOIiwKICAgICAgInBhc3N3b3JkIjogInNlY3JldCIsCiAgICAgICJhdXRob3JpdGllcyI6IFsgInByb3RvY29sLWFkYXB0ZXIiLCAiZGV2aWNlLW1hbmFnZXIiIF0KICAgIH0sCiAgICAiZGV2aWNlLXJlZ2lzdHJ5IjogewogICAgICAibWVjaGFuaXNtIjogIkVYVEVSTkFMIiwKICAgICAgImF1dGhvcml0aWVzIjogW10KICAgIH0sCiAgICAiY29uc3VtZXJASE9OTyI6IHsKICAgICAgIm1lY2hhbmlzbSI6ICJQTEFJTiIsCiAgICAgICJwYXNzd29yZCI6ICJ2ZXJ5c2VjcmV0IiwKICAgICAgImF1dGhvcml0aWVzIjogWyAiYXBwbGljYXRpb24iIF0KICAgIH0KICB9Cn0K
+---
+# Source: hono/templates/hono-service-command-router/hono-service-command-router-example-keys.yaml
+#
+# Copyright (c) 2022 Contributors to the Eclipse Foundation
+#
+# See the NOTICE file(s) distributed with this work for additional
+# information regarding copyright ownership.
+#
+# This program and the accompanying materials are made available under the
+# terms of the Eclipse Public License 2.0 which is available at
+# http://www.eclipse.org/legal/epl-2.0
+#
+# SPDX-License-Identifier: EPL-2.0
+#
+apiVersion: v1
+kind: Secret
+metadata:
+  name: "eclipse-hono-service-command-router-example-keys"
+  namespace: "hono"
+  labels:
+    app.kubernetes.io/name: "hono"
+    helm.sh/chart: "hono-2.5.1"
+    app.kubernetes.io/managed-by: "Helm"
+    app.kubernetes.io/instance: "eclipse-hono"
+    app.kubernetes.io/version: "2.4.0"
+    app.kubernetes.io/component: "service-command-router"
+type: Opaque
+data:
+  tls.key: LS0tLS1CRUdJTiBQUklWQVRFIEtFWS0tLS0tCk1JR0hBZ0VBTUJNR0J5cUdTTTQ5QWdFR0NDcUdTTTQ5QXdFSEJHMHdhd0lCQVFRZ2ZMQ3RKNTJiZGM3WE5sTEMKVkVhamFPM3lmOW91c1hnQy96VTJneUNpd2dtaFJBTkNBQVRham9lem1Bc2R4M09BWDN1c2gxWktNcVEyZUw1Rwpkcm5EZnpnT2NxTnBUMHJvRTFsNXAxQmdmU3oxZkNzRzhnUG0wSStkM2dWa040aFpSYS83R1FXTgotLS0tLUVORCBQUklWQVRFIEtFWS0tLS0tCg==
+  tls.crt: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUNVakNDQWZpZ0F3SUJBZ0lVQjJ2eFdJOXdqMzJPSExhQUJWVitpdVZrZFMwd0NnWUlLb1pJemowRUF3SXcKVURFTE1Ba0dBMVVFQmhNQ1EwRXhEekFOQmdOVkJBY01CazkwZEdGM1lURVVNQklHQTFVRUNnd0xSV05zYVhCegpaU0JKYjFReERUQUxCZ05WQkFzTUJFaHZibTh4Q3pBSkJnTlZCQU1NQW1OaE1CNFhEVEl6TURZeU5EQTVNRFl3Ck1Gb1hEVEkwTURZeU16QTVNRFl3TUZvd1hERUxNQWtHQTFVRUJoTUNRMEV4RHpBTkJnTlZCQWNNQms5MGRHRjMKWVRFVU1CSUdBMVVFQ2d3TFJXTnNhWEJ6WlNCSmIxUXhEVEFMQmdOVkJBc01CRWh2Ym04eEZ6QVZCZ05WQkFNTQpEbU52YlcxaGJtUXRjbTkxZEdWeU1Ga3dFd1lIS29aSXpqMENBUVlJS29aSXpqMERBUWNEUWdBRTJvNkhzNWdMCkhjZHpnRjk3cklkV1NqS2tObmkrUm5hNXczODREbktqYVU5SzZCTlplYWRRWUgwczlYd3JCdklENXRDUG5kNEYKWkRlSVdVV3YreGtGamFPQm96Q0JvREFkQmdOVkhRNEVGZ1FVVDV5QXZoQTlUVWZORUZSZUJnNWhBTCtPeGk4dwpDd1lEVlIwUEJBUURBZ09vTUIwR0ExVWRKUVFXTUJRR0NDc0dBUVVGQndNQkJnZ3JCZ0VGQlFjREFqQlRCZ05WCkhSRUVUREJLZ2h0b2IyNXZMWE5sY25acFkyVXRZMjl0YldGdVpDMXliM1YwWlhLQ0lHaHZibTh0YzJWeWRtbGoKWlMxamIyMXRZVzVrTFhKdmRYUmxjaTVvYjI1dmdnbHNiMk5oYkdodmMzUXdDZ1lJS29aSXpqMEVBd0lEU0FBdwpSUUloQUtNc08yVHB5Qnl2V0JuWTVXTTNrdStuNGFESEM2MXNpSGhObVR2VURodXJBaUJpb3lDUGx3SThveFRzCmZRcDAyelRSa3dCbWIxMHJMRUhaTm1jRkVWcGNWQT09Ci0tLS0tRU5EIENFUlRJRklDQVRFLS0tLS0KLS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUI0ekNDQVltZ0F3SUJBZ0lVRHZmc2V2SHBGN09iUmVBQW1HWFhISHNBWEQwd0NnWUlLb1pJemowRUF3SXcKVWpFTE1Ba0dBMVVFQmhNQ1EwRXhEekFOQmdOVkJBY01CazkwZEdGM1lURVVNQklHQTFVRUNnd0xSV05zYVhCegpaU0JKYjFReERUQUxCZ05WQkFzTUJFaHZibTh4RFRBTEJnTlZCQU1NQkhKdmIzUXdIaGNOTWpNd05qSTBNRGt3Ck5qQXdXaGNOTWpRd05qSXpNRGt3TmpBd1dqQlFNUXN3Q1FZRFZRUUdFd0pEUVRFUE1BMEdBMVVFQnd3R1QzUjAKWVhkaE1SUXdFZ1lEVlFRS0RBdEZZMnhwY0hObElFbHZWREVOTUFzR0ExVUVDd3dFU0c5dWJ6RUxNQWtHQTFVRQpBd3dDWTJFd1dUQVRCZ2NxaGtqT1BRSUJCZ2dxaGtqT1BRTUJCd05DQUFRcGhvVjdaSlpnNzFWUmxkNjZQS2lXCk1IWWF0Zkw3MS94dWdoaFNzSGZlNEdZTkE2aDlwejZRYjBlOWg4S2o2dExURk5UaHZaMEU1MDJveTZlL0E1dHEKb3o4d1BUQWRCZ05WSFE0RUZnUVViQXlSUkNVM1lDcDdacTFUYkdlVy9mYWdxSEV3RHdZRFZSMFRBUUgvQkFVdwpBd0VCL3pBTEJnTlZIUThFQkFNQ0FRWXdDZ1lJS29aSXpqMEVBd0lEU0FBd1JRSWhBSmFxVXU0UVNMSzNwd0NkCk5MbXJLSG9sNmRYcWFLU29GVUtZVmRBU3NGc1JBaUJ2WDhYSElkUmsvQWVrY0RYNEFlakRnMVc1RWJ2UDVyMXQKS2lFc1YxbDFUdz09Ci0tLS0tRU5EIENFUlRJRklDQVRFLS0tLS0K
+---
+# Source: hono/templates/hono-service-command-router/hono-service-command-router-secret.yaml
+#
+# Copyright (c) 2021, 2022 Contributors to the Eclipse Foundation
+#
+# See the NOTICE file(s) distributed with this work for additional
+# information regarding copyright ownership.
+#
+# This program and the accompanying materials are made available under the
+# terms of the Eclipse Public License 2.0 which is available at
+# http://www.eclipse.org/legal/epl-2.0
+#
+# SPDX-License-Identifier: EPL-2.0
+#
+apiVersion: v1
+kind: Secret
+metadata:
+  name: "eclipse-hono-service-command-router-conf"
+  namespace: "hono"
+  labels:
+    app.kubernetes.io/name: "hono"
+    helm.sh/chart: "hono-2.5.1"
+    app.kubernetes.io/managed-by: "Helm"
+    app.kubernetes.io/instance: "eclipse-hono"
+    app.kubernetes.io/version: "2.4.0"
+    app.kubernetes.io/component: "service-command-router"
+type: Opaque
+stringData:
+  dns-cache-config.properties: |
+    networkaddress.cache.negative.ttl=0
+  application.yml: |
+    hono:
+      app:
+        # The embedded cache is created for each service instance being deployed, so
+        # we need to limit the number to one instance in order to ensure consistent cache content
+        maxInstances: 1
+      auth:
+        host: "eclipse-hono-service-auth"
+        port: 5671
+        trustStorePath: "/opt/hono/tls/ca.crt"
+        hostnameVerificationRequired: false
+        name: "Hono service-command-router"
+      commandRouter:
+        amqp:
+          bindAddress: "0.0.0.0"
+          keyPath: "/opt/hono/tls/tls.key"
+          certPath: "/opt/hono/tls/tls.crt"
+        cache:
+      registration:
+        name: "Hono service-command-router"
+        host: "eclipse-hono-service-device-registry"
+        port: 5671
+        credentialsPath: "/opt/hono/config/adapter.credentials"
+        trustStorePath: "/opt/hono/tls/ca.crt"
+        hostnameVerificationRequired: false
+      tenant:
+        name: "Hono service-command-router"
+        host: "eclipse-hono-service-device-registry"
+        port: 5671
+        credentialsPath: "/opt/hono/config/adapter.credentials"
+        trustStorePath: "/opt/hono/tls/ca.crt"
+        hostnameVerificationRequired: false
+      
+      kafka:
+        commonClientConfig:
+          bootstrap.servers: hono-kafka-broker.hono:9092
+        
+    quarkus:
+      console:
+        color: false
+      log:
+        min-level: TRACE
+        level: INFO
+        category:
+          "io.quarkus.vertx.core.runtime":
+            level: DEBUG
+      vertx:
+        prefer-native-transport: true
+        resolver:
+          cache-max-time-to-live: 0
+  cache-config.xml: |
+    <?xml version="1.0" encoding="UTF-8"?>
+    <!-- 
+        Copyright (c) 2021, 2022 Contributors to the Eclipse Foundation
+       
+        See the NOTICE file(s) distributed with this work for additional
+        information regarding copyright ownership.
+       
+        This program and the accompanying materials are made available under the
+        terms of the Eclipse Public License 2.0 which is available at
+        http://www.eclipse.org/legal/epl-2.0
+       
+        SPDX-License-Identifier: EPL-2.0
+     -->
+    <infinispan
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:schemaLocation="urn:infinispan:config:13.0 https://infinispan.org/schemas/infinispan-config-13.0.xsd"
+            xmlns="urn:infinispan:config:13.0">
+    
+      <cache-container default-cache="command-router">
+        <local-cache name="command-router" simple-cache="true">
+          <encoding media-type="application/x-protostream" />
+          <memory max-count="200" storage="OFF_HEAP" when-full="REMOVE"></memory>
+        </local-cache>
+      </cache-container>
+    </infinispan>
+    
+data:
+  adapter.credentials: dXNlcm5hbWU9Y29tbWFuZC1yb3V0ZXJASE9OTwpwYXNzd29yZD1jbWQtcm91dGVyLXNlY3JldAo=
+---
+# Source: hono/templates/hono-service-device-registry-mongodb/hono-service-device-registry-secret.yaml
+#
+# Copyright (c) 2020, 2023 Contributors to the Eclipse Foundation
+#
+# See the NOTICE file(s) distributed with this work for additional
+# information regarding copyright ownership.
+#
+# This program and the accompanying materials are made available under the
+# terms of the Eclipse Public License 2.0 which is available at
+# http://www.eclipse.org/legal/epl-2.0
+#
+# SPDX-License-Identifier: EPL-2.0
+#
+apiVersion: v1
+kind: Secret
+metadata:
+  name: "eclipse-hono-service-device-registry-conf"
+  namespace: "hono"
+  labels:
+    app.kubernetes.io/name: "hono"
+    helm.sh/chart: "hono-2.5.1"
+    app.kubernetes.io/managed-by: "Helm"
+    app.kubernetes.io/instance: "eclipse-hono"
+    app.kubernetes.io/version: "2.4.0"
+    app.kubernetes.io/component: "service-device-registry"
+type: Opaque
+stringData:
+  application.yml: |
+    hono:
+      app:
+        maxInstances: 1
+      auth:
+        connectTimeout: 2000
+        host: eclipse-hono-service-auth
+        hostnameVerificationRequired: false
+        port: 5672
+        supportedSaslMechanisms: PLAIN
+      registry:
+        amqp:
+          insecurePortBindAddress: 0.0.0.0
+          insecurePortEnabled: true
+        http:
+          insecurePortBindAddress: 0.0.0.0
+          insecurePortEnabled: true
+          deviceIdPattern: "^[a-zA-Z0-9-_\\.\\:]+$"
+      mongodb:
+        dbName: hono-device
+        host: mongodb.honno
+        password: aaa123456
+        port: 27017
+        username: root
+      
+      kafka:
+        commonClientConfig:
+          bootstrap.servers: hono-kafka-broker.hono:9092
+        event:
+          producerConfig:
+            compression.type: none
+        notification:
+          producerConfig:
+            compression.type: none    
+    quarkus:
+      console:
+        color: false
+      log:
+        min-level: TRACE
+        level: INFO
+        category:
+          "io.quarkus.vertx.core.runtime":
+            level: DEBUG
+      vertx:
+        prefer-native-transport: true
+        resolver:
+          cache-max-time-to-live: 0
+---
+# Source: hono/templates/defaults/default-logging-config.yaml
+#
+# Copyright (c) 2022 Contributors to the Eclipse Foundation
+#
+# See the NOTICE file(s) distributed with this work for additional
+# information regarding copyright ownership.
+#
+# This program and the accompanying materials are made available under the
+# terms of the Eclipse Public License 2.0 which is available at
+# http://www.eclipse.org/legal/epl-2.0
+#
+# SPDX-License-Identifier: EPL-2.0
+#
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: "eclipse-hono-default-logging-config"
+  namespace: "hono"
+  labels:
+    app.kubernetes.io/name: "hono"
+    helm.sh/chart: "hono-2.5.1"
+    app.kubernetes.io/managed-by: "Helm"
+    app.kubernetes.io/instance: "eclipse-hono"
+    app.kubernetes.io/version: "2.4.0"
+    app.kubernetes.io/component: "logging"
+data:
+  logging-quarkus-prod.yml: |
+    quarkus:
+      log:
+        category:
+          "org.apache.kafka":
+            level: ERROR
+          "org.eclipse.hono":
+            level: INFO
+          "org.eclipse.hono.client.impl.HonoConnectionImpl":
+            level: ERROR
+  logging-quarkus-dev.yml: |
+    quarkus:
+      log:
+        category:
+          "io.netty.handler.logging.LoggingHandler":
+            level: DEBUG
+          "org.apache.kafka":
+            level: INFO
+          "org.eclipse.hono":
+            level: DEBUG
+          "org.infinispan":
+            level: DEBUG
+  logging-quarkus-trace.yml: |
+    quarkus:
+      log:
+        category:
+          "io.netty.handler.logging.LoggingHandler":
+            level: DEBUG
+          "org.apache.kafka":
+            level: INFO
+          "org.eclipse.hono":
+            level: TRACE
+          "org.infinispan":
+            level: DEBUG
+---
+# Source: hono/templates/defaults/example-trust-store.yaml
+#
+# Copyright (c) 2022 Contributors to the Eclipse Foundation
+#
+# See the NOTICE file(s) distributed with this work for additional
+# information regarding copyright ownership.
+#
+# This program and the accompanying materials are made available under the
+# terms of the Eclipse Public License 2.0 which is available at
+# http://www.eclipse.org/legal/epl-2.0
+#
+# SPDX-License-Identifier: EPL-2.0
+#
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: "eclipse-hono-example-trust-store"
+  namespace: "hono"
+  labels:
+    app.kubernetes.io/name: "hono"
+    helm.sh/chart: "hono-2.5.1"
+    app.kubernetes.io/managed-by: "Helm"
+    app.kubernetes.io/instance: "eclipse-hono"
+    app.kubernetes.io/version: "2.4.0"
+    app.kubernetes.io/component: "security"
+data:
+  ca.crt: |
+    -----BEGIN CERTIFICATE-----
+    MIIB4zCCAYmgAwIBAgIUDvfsevHpF7ObReAAmGXXHHsAXD0wCgYIKoZIzj0EAwIw
+    UjELMAkGA1UEBhMCQ0ExDzANBgNVBAcMBk90dGF3YTEUMBIGA1UECgwLRWNsaXBz
+    ZSBJb1QxDTALBgNVBAsMBEhvbm8xDTALBgNVBAMMBHJvb3QwHhcNMjMwNjI0MDkw
+    NjAwWhcNMjQwNjIzMDkwNjAwWjBQMQswCQYDVQQGEwJDQTEPMA0GA1UEBwwGT3R0
+    YXdhMRQwEgYDVQQKDAtFY2xpcHNlIElvVDENMAsGA1UECwwESG9ubzELMAkGA1UE
+    AwwCY2EwWTATBgcqhkjOPQIBBggqhkjOPQMBBwNCAAQphoV7ZJZg71VRld66PKiW
+    MHYatfL71/xughhSsHfe4GYNA6h9pz6Qb0e9h8Kj6tLTFNThvZ0E502oy6e/A5tq
+    oz8wPTAdBgNVHQ4EFgQUbAyRRCU3YCp7Zq1TbGeW/fagqHEwDwYDVR0TAQH/BAUw
+    AwEB/zALBgNVHQ8EBAMCAQYwCgYIKoZIzj0EAwIDSAAwRQIhAJaqUu4QSLK3pwCd
+    NLmrKHol6dXqaKSoFUKYVdASsFsRAiBvX8XHIdRk/AekcDX4AejDg1W5EbvP5r1t
+    KiEsV1l1Tw==
+    -----END CERTIFICATE-----
+    -----BEGIN CERTIFICATE-----
+    MIICeTCCAh+gAwIBAgIUfwZ93GxLHl4pKx+jUiyh/bXYkSkwCgYIKoZIzj0EAwIw
+    UjELMAkGA1UEBhMCQ0ExDzANBgNVBAcMBk90dGF3YTEUMBIGA1UECgwLRWNsaXBz
+    ZSBJb1QxDTALBgNVBAsMBEhvbm8xDTALBgNVBAMMBHJvb3QwHhcNMjMwNjI0MDkw
+    NjAwWhcNMjQwNjIzMDkwNjAwWjBSMQswCQYDVQQGEwJDQTEPMA0GA1UEBwwGT3R0
+    YXdhMRQwEgYDVQQKDAtFY2xpcHNlIElvVDENMAsGA1UECwwESG9ubzENMAsGA1UE
+    AwwEcm9vdDBZMBMGByqGSM49AgEGCCqGSM49AwEHA0IABAgp8l1Ao38qj7kizHpb
+    5hBdid6mLc3JY67K11hocPN5z/V2SZ01Az+wo2HYtRem58KbAQNOBTvI2vDx0EUu
+    d22jgdIwgc8wHQYDVR0OBBYEFD7oR5QKFx4rb18HZ+62kQ1x66cUMIGPBgNVHSME
+    gYcwgYSAFD7oR5QKFx4rb18HZ+62kQ1x66cUoVakVDBSMQswCQYDVQQGEwJDQTEP
+    MA0GA1UEBwwGT3R0YXdhMRQwEgYDVQQKDAtFY2xpcHNlIElvVDENMAsGA1UECwwE
+    SG9ubzENMAsGA1UEAwwEcm9vdIIUfwZ93GxLHl4pKx+jUiyh/bXYkSkwDwYDVR0T
+    AQH/BAUwAwEB/zALBgNVHQ8EBAMCAQYwCgYIKoZIzj0EAwIDSAAwRQIgEXB+MLWl
+    LiuwXQ7w6PmcDhf646XAl3Nfo8YMSziVPIUCIQDDUfiiAnrniyFjlMKHDKk1GI/J
+    UT6Pq7oL2KbKP37rNA==
+    -----END CERTIFICATE-----
+    -----BEGIN CERTIFICATE-----
+    MIIFFjCCAv6gAwIBAgIRAJErCErPDBinU/bWLiWnX1owDQYJKoZIhvcNAQELBQAw
+    TzELMAkGA1UEBhMCVVMxKTAnBgNVBAoTIEludGVybmV0IFNlY3VyaXR5IFJlc2Vh
+    cmNoIEdyb3VwMRUwEwYDVQQDEwxJU1JHIFJvb3QgWDEwHhcNMjAwOTA0MDAwMDAw
+    WhcNMjUwOTE1MTYwMDAwWjAyMQswCQYDVQQGEwJVUzEWMBQGA1UEChMNTGV0J3Mg
+    RW5jcnlwdDELMAkGA1UEAxMCUjMwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEK
+    AoIBAQC7AhUozPaglNMPEuyNVZLD+ILxmaZ6QoinXSaqtSu5xUyxr45r+XXIo9cP
+    R5QUVTVXjJ6oojkZ9YI8QqlObvU7wy7bjcCwXPNZOOftz2nwWgsbvsCUJCWH+jdx
+    sxPnHKzhm+/b5DtFUkWWqcFTzjTIUu61ru2P3mBw4qVUq7ZtDpelQDRrK9O8Zutm
+    NHz6a4uPVymZ+DAXXbpyb/uBxa3Shlg9F8fnCbvxK/eG3MHacV3URuPMrSXBiLxg
+    Z3Vms/EY96Jc5lP/Ooi2R6X/ExjqmAl3P51T+c8B5fWmcBcUr2Ok/5mzk53cU6cG
+    /kiFHaFpriV1uxPMUgP17VGhi9sVAgMBAAGjggEIMIIBBDAOBgNVHQ8BAf8EBAMC
+    AYYwHQYDVR0lBBYwFAYIKwYBBQUHAwIGCCsGAQUFBwMBMBIGA1UdEwEB/wQIMAYB
+    Af8CAQAwHQYDVR0OBBYEFBQusxe3WFbLrlAJQOYfr52LFMLGMB8GA1UdIwQYMBaA
+    FHm0WeZ7tuXkAXOACIjIGlj26ZtuMDIGCCsGAQUFBwEBBCYwJDAiBggrBgEFBQcw
+    AoYWaHR0cDovL3gxLmkubGVuY3Iub3JnLzAnBgNVHR8EIDAeMBygGqAYhhZodHRw
+    Oi8veDEuYy5sZW5jci5vcmcvMCIGA1UdIAQbMBkwCAYGZ4EMAQIBMA0GCysGAQQB
+    gt8TAQEBMA0GCSqGSIb3DQEBCwUAA4ICAQCFyk5HPqP3hUSFvNVneLKYY611TR6W
+    PTNlclQtgaDqw+34IL9fzLdwALduO/ZelN7kIJ+m74uyA+eitRY8kc607TkC53wl
+    ikfmZW4/RvTZ8M6UK+5UzhK8jCdLuMGYL6KvzXGRSgi3yLgjewQtCPkIVz6D2QQz
+    CkcheAmCJ8MqyJu5zlzyZMjAvnnAT45tRAxekrsu94sQ4egdRCnbWSDtY7kh+BIm
+    lJNXoB1lBMEKIq4QDUOXoRgffuDghje1WrG9ML+Hbisq/yFOGwXD9RiX8F6sw6W4
+    avAuvDszue5L3sz85K+EC4Y/wFVDNvZo4TYXao6Z0f+lQKc0t8DQYzk1OXVu8rp2
+    yJMC6alLbBfODALZvYH7n7do1AZls4I9d1P4jnkDrQoxB3UqQ9hVl3LEKQ73xF1O
+    yK5GhDDX8oVfGKF5u+decIsH4YaTw7mP3GFxJSqv3+0lUFJoi5Lc5da149p90Ids
+    hCExroL1+7mryIkXPeFM5TgO9r0rvZaBFOvV2z0gp35Z0+L4WPlbuEjN/lxPFin+
+    HlUjr8gRsI3qfJOQFy/9rKIJR0Y/8Omwt/8oTWgy1mdeHmmjk7j1nYsvC9JSQ6Zv
+    MldlTTKB3zhThV1+XWYp6rjd5JW1zbVWEkLNxE7GJThEUG3szgBVGP7pSWTUTsqX
+    nLRbwHOoq7hHwg==
+    -----END CERTIFICATE-----
+    -----BEGIN CERTIFICATE-----
+    MIIFazCCA1OgAwIBAgIRAIIQz7DSQONZRGPgu2OCiwAwDQYJKoZIhvcNAQELBQAw
+    TzELMAkGA1UEBhMCVVMxKTAnBgNVBAoTIEludGVybmV0IFNlY3VyaXR5IFJlc2Vh
+    cmNoIEdyb3VwMRUwEwYDVQQDEwxJU1JHIFJvb3QgWDEwHhcNMTUwNjA0MTEwNDM4
+    WhcNMzUwNjA0MTEwNDM4WjBPMQswCQYDVQQGEwJVUzEpMCcGA1UEChMgSW50ZXJu
+    ZXQgU2VjdXJpdHkgUmVzZWFyY2ggR3JvdXAxFTATBgNVBAMTDElTUkcgUm9vdCBY
+    MTCCAiIwDQYJKoZIhvcNAQEBBQADggIPADCCAgoCggIBAK3oJHP0FDfzm54rVygc
+    h77ct984kIxuPOZXoHj3dcKi/vVqbvYATyjb3miGbESTtrFj/RQSa78f0uoxmyF+
+    0TM8ukj13Xnfs7j/EvEhmkvBioZxaUpmZmyPfjxwv60pIgbz5MDmgK7iS4+3mX6U
+    A5/TR5d8mUgjU+g4rk8Kb4Mu0UlXjIB0ttov0DiNewNwIRt18jA8+o+u3dpjq+sW
+    T8KOEUt+zwvo/7V3LvSye0rgTBIlDHCNAymg4VMk7BPZ7hm/ELNKjD+Jo2FR3qyH
+    B5T0Y3HsLuJvW5iB4YlcNHlsdu87kGJ55tukmi8mxdAQ4Q7e2RCOFvu396j3x+UC
+    B5iPNgiV5+I3lg02dZ77DnKxHZu8A/lJBdiB3QW0KtZB6awBdpUKD9jf1b0SHzUv
+    KBds0pjBqAlkd25HN7rOrFleaJ1/ctaJxQZBKT5ZPt0m9STJEadao0xAH0ahmbWn
+    OlFuhjuefXKnEgV4We0+UXgVCwOPjdAvBbI+e0ocS3MFEvzG6uBQE3xDk3SzynTn
+    jh8BCNAw1FtxNrQHusEwMFxIt4I7mKZ9YIqioymCzLq9gwQbooMDQaHWBfEbwrbw
+    qHyGO0aoSCqI3Haadr8faqU9GY/rOPNk3sgrDQoo//fb4hVC1CLQJ13hef4Y53CI
+    rU7m2Ys6xt0nUW7/vGT1M0NPAgMBAAGjQjBAMA4GA1UdDwEB/wQEAwIBBjAPBgNV
+    HRMBAf8EBTADAQH/MB0GA1UdDgQWBBR5tFnme7bl5AFzgAiIyBpY9umbbjANBgkq
+    hkiG9w0BAQsFAAOCAgEAVR9YqbyyqFDQDLHYGmkgJykIrGF1XIpu+ILlaS/V9lZL
+    ubhzEFnTIZd+50xx+7LSYK05qAvqFyFWhfFQDlnrzuBZ6brJFe+GnY+EgPbk6ZGQ
+    3BebYhtF8GaV0nxvwuo77x/Py9auJ/GpsMiu/X1+mvoiBOv/2X/qkSsisRcOj/KK
+    NFtY2PwByVS5uCbMiogziUwthDyC3+6WVwW6LLv3xLfHTjuCvjHIInNzktHCgKQ5
+    ORAzI4JMPJ+GslWYHb4phowim57iaztXOoJwTdwJx4nLCgdNbOhdjsnvzqvHu7Ur
+    TkXWStAmzOVyyghqpZXjFaH3pO3JLF+l+/+sKAIuvtd7u+Nxe5AW0wdeRlN8NwdC
+    jNPElpzVmbUq4JUagEiuTDkHzsxHpFKVK7q4+63SM1N95R1NbdWhscdCb+ZAJzVc
+    oyi3B43njTOQ5yOf+1CceWxG1bQVs5ZufpsMljq4Ui0/1lvh+wjChP4kqKOJ2qxq
+    4RgqsahDYVvTH9w7jXbyLeiNdd8XM2w9U/t7y0Ff/9yi0GE44Za4rF2LN9d11TPA
+    mRGunUHBcnWEvgJBQl9nJEiU0Zsnvgc/ubhPgXRR4Xq37Z0j4r7g1SgEEzwxA57d
+    emyPxgcYxn/eR44/KJ4EBs+lVDR3veyJm+kXQ99b21/+jh5Xos1AnX5iItreGCc=
+    -----END CERTIFICATE-----
+---
+# Source: hono/templates/hono-service-device-registry-base/hono-service-device-registry-post-install-configmap.yaml
+#
+# Copyright (c) 2020 Contributors to the Eclipse Foundation
+#
+# See the NOTICE file(s) distributed with this work for additional
+# information regarding copyright ownership.
+#
+# This program and the accompanying materials are made available under the
+# terms of the Eclipse Public License 2.0 which is available at
+# http://www.eclipse.org/legal/epl-2.0
+#
+# SPDX-License-Identifier: EPL-2.0
+#
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: "eclipse-hono-post-install-device-registry-conf"
+  namespace: "hono"
+  labels:
+    app.kubernetes.io/name: "hono"
+    helm.sh/chart: "hono-2.5.1"
+    app.kubernetes.io/managed-by: "Helm"
+    app.kubernetes.io/instance: "eclipse-hono"
+    app.kubernetes.io/version: "2.4.0"
+    app.kubernetes.io/component: "service-device-registry"
+data:
+  add_example_data_device_registry.sh: |
+    #!/bin/sh
+    #*******************************************************************************
+    # Copyright (c) 2020, 2023 Contributors to the Eclipse Foundation
+    #
+    # See the NOTICE file(s) distributed with this work for additional
+    # information regarding copyright ownership.
+    #
+    # This program and the accompanying materials are made available under the
+    # terms of the Eclipse Public License 2.0 which is available at
+    # http://www.eclipse.org/legal/epl-2.0
+    #
+    # SPDX-License-Identifier: EPL-2.0
+    #*******************************************************************************
+    HTTP_BASE_URL="http://eclipse-hono-service-device-registry:8080/v1"
+    
+    check_status() {
+      EXIT_STATUS=$1
+      HTTP_RESPONSE=$2
+    
+      if [ $EXIT_STATUS -ne 0 ]
+      then
+        echo "Curl command failed [exit-code: $EXIT_STATUS]"
+        exit 1
+      elif [ $HTTP_RESPONSE -ne "201" ] && [ $HTTP_RESPONSE -ne "204" ] && [ $HTTP_RESPONSE -ne "409" ]
+      then
+        echo "Http request failed [http-response: $HTTP_RESPONSE]"
+        exit 1
+      fi
+    }
+    
+    echo "Device Registry Http endpoint base url: [$HTTP_BASE_URL]"
+    
+    add_tenant(){
+      TENANT_ID=$1
+      HTTP_REQUEST_BODY=$2
+    
+      echo "Adding tenant [$TENANT_ID]"
+      HTTP_RESPONSE=$(curl -o /dev/null -sw "%{http_code}" \
+                        -X POST "$HTTP_BASE_URL/tenants/$TENANT_ID" \
+                        --header 'Content-Type: application/json' \
+                        --data-raw "$HTTP_REQUEST_BODY")
+    
+      check_status $? $HTTP_RESPONSE
+    }
+    
+    register_device(){
+      TENANT_ID=$1
+      DEVICE_ID=$2
+      HTTP_REQUEST_BODY=$3
+    
+      echo "Registering device [$TENANT_ID:$DEVICE_ID]"
+      HTTP_RESPONSE=$(curl -o /dev/null -sw "%{http_code}" \
+                      -X POST "$HTTP_BASE_URL/devices/$TENANT_ID/$DEVICE_ID" \
+                      --header 'Content-Type: application/json' \
+                      --data-raw "$HTTP_REQUEST_BODY")
+    
+      check_status $? $HTTP_RESPONSE
+    }
+    
+    
+    add_credentials(){
+      TENANT_ID=$1
+      DEVICE_ID=$2
+      HTTP_REQUEST_BODY=$3
+    
+      echo "Adding credentials [$TENANT_ID:$DEVICE_ID]"
+      HTTP_RESPONSE=$(curl -o /dev/null -sw "%{http_code}" \
+                    -X PUT "$HTTP_BASE_URL/credentials/$TENANT_ID/$DEVICE_ID" \
+                    --header 'Content-Type: application/json' \
+                    --data-raw "$HTTP_REQUEST_BODY")
+    
+      check_status $? $HTTP_RESPONSE
+    }
+    
+    . ./example-tenants.sh
+    . ./example-devices.sh
+    . ./example-credentials.sh
+    
+  example-tenants.sh: |
+    
+    #!/bin/sh
+    #*******************************************************************************
+    # Copyright (c) 2020, 2022 Contributors to the Eclipse Foundation
+    #
+    # See the NOTICE file(s) distributed with this work for additional
+    # information regarding copyright ownership.
+    #
+    # This program and the accompanying materials are made available under the
+    # terms of the Eclipse Public License 2.0 which is available at
+    # http://www.eclipse.org/legal/epl-2.0
+    #
+    # SPDX-License-Identifier: EPL-2.0
+    #*******************************************************************************
+    
+    DEFAULT_TENANT_TRUSTED_CA=`cat default_tenant-trusted-ca.json`
+    
+    add_tenant 'DEFAULT_TENANT' \
+              "{
+                  \"enabled\": true,
+                  \"trusted-ca\": [
+    $DEFAULT_TENANT_TRUSTED_CA
+                  ]
+                }"
+    
+    add_tenant 'HTTP_TENANT' \
+              '{
+                  "enabled": true,
+                  "adapters": [
+                    {
+                      "type": "hono-amqp",
+                      "enabled": false,
+                      "device-authentication-required": true
+                    },
+                    {
+                      "type": "hono-coap",
+                      "enabled": false,
+                      "device-authentication-required": true
+                    },
+                    {
+                      "type": "hono-http",
+                      "enabled": true,
+                      "device-authentication-required": true
+                    },
+                    {
+                      "type": "hono-lora",
+                      "enabled": false,
+                      "device-authentication-required": true
+                    },
+                    {
+                      "type": "hono-mqtt",
+                      "enabled": false,
+                      "device-authentication-required": true
+                    }
+                  ]
+                }'
+    
+  example-devices.sh: |
+    
+    #!/bin/sh
+    #*******************************************************************************
+    # Copyright (c) 2020 Contributors to the Eclipse Foundation
+    #
+    # See the NOTICE file(s) distributed with this work for additional
+    # information regarding copyright ownership.
+    #
+    # This program and the accompanying materials are made available under the
+    # terms of the Eclipse Public License 2.0 which is available at
+    # http://www.eclipse.org/legal/epl-2.0
+    #
+    # SPDX-License-Identifier: EPL-2.0
+    #*******************************************************************************
+    
+    register_device 'DEFAULT_TENANT' '4711' \
+                    '{
+                        "enabled": true,
+                        "defaults": {
+                            "content-type": "application/vnd.bumlux",
+                            "importance": "high"
+                        }
+                    }'
+    
+    register_device 'DEFAULT_TENANT' '4712' \
+                    '{
+                        "enabled": true,
+                        "via": [
+                            "gw-1"
+                        ]
+                    }'
+    
+    register_device 'DEFAULT_TENANT' 'gw-1' \
+                    '{
+                        "enabled": true
+                    }'
+    
+  example-credentials.sh: |
+    
+    #!/bin/sh
+    #*******************************************************************************
+    # Copyright (c) 2020 Contributors to the Eclipse Foundation
+    #
+    # See the NOTICE file(s) distributed with this work for additional
+    # information regarding copyright ownership.
+    #
+    # This program and the accompanying materials are made available under the
+    # terms of the Eclipse Public License 2.0 which is available at
+    # http://www.eclipse.org/legal/epl-2.0
+    #
+    # SPDX-License-Identifier: EPL-2.0
+    #*******************************************************************************
+    
+    add_credentials 'DEFAULT_TENANT' '4711' \
+                    '[
+                      {
+                          "type": "hashed-password",
+                          "auth-id": "sensor1",
+                          "enabled": true,
+                          "secrets": [
+                              {
+                                  "not-before": "2017-05-01T14:00:00+01:00",
+                                  "not-after": "2037-06-01T14:00:00+01:00",
+                                  "hash-function": "bcrypt",
+                                  "comment": "pwd: hono-secret",
+                                  "pwd-hash": "$2a$10$N7UMjhZ2hYx.yuvW9WVXZ.4y33mr6MvnpAsZ8wgLHnkamH2tZ1jD."
+                              }
+                          ]
+                      },
+                      {
+                          "type": "psk",
+                          "auth-id": "sensor1",
+                          "enabled": true,
+                          "secrets": [
+                              {
+                                  "not-before": "2018-01-01T00:00:00+01:00",
+                                  "not-after": "2037-06-01T14:00:00+01:00",
+                                  "comment": "key: hono-secret",
+                                  "key": "aG9uby1zZWNyZXQ="
+                              }
+                          ]
+                      },
+                      {
+                          "type": "x509-cert",
+                          "auth-id": "CN=Device 4711,OU=Hono,O=Eclipse IoT,L=Ottawa,C=CA",
+                          "enabled": true,
+                          "secrets": [
+                              {
+                                  "comment": "The secrets array must contain an object, which can be empty."
+                              }
+                          ]
+                      }]'
+    
+    add_credentials 'DEFAULT_TENANT' 'gw-1' \
+                    '[
+                          {
+                              "type": "hashed-password",
+                              "auth-id": "gw",
+                              "enabled": true,
+                              "secrets": [
+                                  {
+                                      "not-before": "2018-01-01T00:00:00+01:00",
+                                      "not-after": "2037-06-01T14:00:00+01:00",
+                                      "hash-function": "bcrypt",
+                                      "comment": "pwd: gw-secret",
+                                      "pwd-hash": "$2a$10$GMcN0iV9gJV7L1sH6J82Xebc1C7CGJ..Rbs./vcTuTuxPEgS9DOa6"
+                                  }
+                              ]
+                          },
+                          {
+                              "type": "psk",
+                              "auth-id": "gw",
+                              "enabled": true,
+                              "secrets": [
+                                  {
+                                      "not-before": "2018-01-01T00:00:00+01:00",
+                                      "not-after": "2037-06-01T14:00:00+01:00",
+                                      "comment": "key: gw-secret",
+                                      "key": "Z3ctc2VjcmV0"
+                                  }
+                              ]
+                          }
+                  ]'
+    
+  default_tenant-trusted-ca.json: |
+    
+    {
+      "subject-dn": "CN=DEFAULT_TENANT_CA,OU=Hono,O=Eclipse IoT,L=Ottawa,C=CA",
+      "public-key": "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEuL3/RNv+etr5zVv1NqoMIIypP9ysh0cVzsf4dKIuo/iNVxhVBMfnqW77DHNK3dhvdmlvRr3ewflSlrJ2ECBjCg==",
+      "algorithm": "EC",
+      "not-before": "2023-06-24T11:06:00+02:00",
+      "not-after": "2024-06-23T11:06:00+02:00"
+    }
+---
+# Source: hono/templates/hono-service-command-router/hono-service-command-router-role.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: "eclipse-hono-service-command-router"
+  namespace: "hono"
+  labels:
+    app.kubernetes.io/name: "hono"
+    helm.sh/chart: "hono-2.5.1"
+    app.kubernetes.io/managed-by: "Helm"
+    app.kubernetes.io/instance: "eclipse-hono"
+    app.kubernetes.io/version: "2.4.0"
+rules:
+  - apiGroups: [""]
+    resources: ["pods"]
+    verbs: ["list", "watch"]
+---
+# Source: hono/templates/hono-service-command-router/hono-service-command-router-rolebinding.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: "eclipse-hono-service-command-router"
+  namespace: "hono"
+  labels:
+    app.kubernetes.io/name: "hono"
+    helm.sh/chart: "hono-2.5.1"
+    app.kubernetes.io/managed-by: "Helm"
+    app.kubernetes.io/instance: "eclipse-hono"
+    app.kubernetes.io/version: "2.4.0"
+roleRef:
+  kind: Role
+  name: "eclipse-hono-service-command-router"
+  apiGroup: rbac.authorization.k8s.io
+subjects:
+  - kind: ServiceAccount
+    name: "eclipse-hono-service-command-router"
+    namespace: hono
+---
+# Source: hono/templates/hono-adapter-http/hono-adapter-http-svc.yaml
+#
+# Copyright (c) 2019, 2023 Contributors to the Eclipse Foundation
+#
+# See the NOTICE file(s) distributed with this work for additional
+# information regarding copyright ownership.
+#
+# This program and the accompanying materials are made available under the
+# terms of the Eclipse Public License 2.0 which is available at
+# http://www.eclipse.org/legal/epl-2.0
+#
+# SPDX-License-Identifier: EPL-2.0
+#
+apiVersion: v1
+kind: Service
+metadata:
+  name: "eclipse-hono-adapter-http"
+  namespace: "hono"
+  labels:
+    app.kubernetes.io/name: "hono"
+    helm.sh/chart: "hono-2.5.1"
+    app.kubernetes.io/managed-by: "Helm"
+    app.kubernetes.io/instance: "eclipse-hono"
+    app.kubernetes.io/version: "2.4.0"
+    app.kubernetes.io/component: "adapter-http"
+spec:
+  ports:
+  - name: http
+    port: 8080
+    protocol: TCP
+    targetPort: http
+    
+  - name: https
+    port: 8443
+    protocol: TCP
+    targetPort: https
+    
+  selector:
+    app.kubernetes.io/name: "hono"
+    app.kubernetes.io/instance: "eclipse-hono"
+    app.kubernetes.io/component: "adapter-http"
+  type: "LoadBalancer"
+---
+# Source: hono/templates/hono-service-auth/hono-service-auth-svc.yaml
+#
+# Copyright (c) 2019, 2022 Contributors to the Eclipse Foundation
+#
+# See the NOTICE file(s) distributed with this work for additional
+# information regarding copyright ownership.
+#
+# This program and the accompanying materials are made available under the
+# terms of the Eclipse Public License 2.0 which is available at
+# http://www.eclipse.org/legal/epl-2.0
+#
+# SPDX-License-Identifier: EPL-2.0
+#
+apiVersion: v1
+kind: Service
+metadata:
+  name: "eclipse-hono-service-auth"
+  namespace: "hono"
+  labels:
+    app.kubernetes.io/name: "hono"
+    helm.sh/chart: "hono-2.5.1"
+    app.kubernetes.io/managed-by: "Helm"
+    app.kubernetes.io/instance: "eclipse-hono"
+    app.kubernetes.io/version: "2.4.0"
+    app.kubernetes.io/component: "service-auth"
+spec:
+  ports:
+  - name: amqps
+    port: 5671
+    protocol: TCP
+    targetPort: amqps
+  - name: validation-keys
+    port: 8088
+    protocol: TCP
+    targetPort: health
+  selector:
+    app.kubernetes.io/name: "hono"
+    app.kubernetes.io/instance: "eclipse-hono"
+    app.kubernetes.io/component: "service-auth"
+---
+# Source: hono/templates/hono-service-command-router/hono-service-command-router-svc.yaml
+#
+# Copyright (c) 2021, 2022 Contributors to the Eclipse Foundation
+#
+# See the NOTICE file(s) distributed with this work for additional
+# information regarding copyright ownership.
+#
+# This program and the accompanying materials are made available under the
+# terms of the Eclipse Public License 2.0 which is available at
+# http://www.eclipse.org/legal/epl-2.0
+#
+# SPDX-License-Identifier: EPL-2.0
+#
+apiVersion: v1
+kind: Service
+metadata:
+  name: "eclipse-hono-service-command-router"
+  namespace: "hono"
+  labels:
+    app.kubernetes.io/name: "hono"
+    helm.sh/chart: "hono-2.5.1"
+    app.kubernetes.io/managed-by: "Helm"
+    app.kubernetes.io/instance: "eclipse-hono"
+    app.kubernetes.io/version: "2.4.0"
+    app.kubernetes.io/component: "service-command-router"
+spec:
+  ports:
+  - name: amqps
+    port: 5671
+    protocol: TCP
+    targetPort: amqps
+  selector:
+    app.kubernetes.io/name: "hono"
+    app.kubernetes.io/instance: "eclipse-hono"
+    app.kubernetes.io/component: "service-command-router"
+---
+# Source: hono/templates/hono-service-device-registry-base/hono-service-device-registry-ext-svc.yaml
+#
+# Copyright (c) 2019, 2023 Contributors to the Eclipse Foundation
+#
+# See the NOTICE file(s) distributed with this work for additional
+# information regarding copyright ownership.
+#
+# This program and the accompanying materials are made available under the
+# terms of the Eclipse Public License 2.0 which is available at
+# http://www.eclipse.org/legal/epl-2.0
+#
+# SPDX-License-Identifier: EPL-2.0
+#
+apiVersion: v1
+kind: Service
+metadata:
+  name: "eclipse-hono-service-device-registry-ext"
+  namespace: "hono"
+  labels:
+    app.kubernetes.io/name: "hono"
+    helm.sh/chart: "hono-2.5.1"
+    app.kubernetes.io/managed-by: "Helm"
+    app.kubernetes.io/instance: "eclipse-hono"
+    app.kubernetes.io/version: "2.4.0"
+    app.kubernetes.io/component: "service-device-registry"
+spec:
+  ports:
+  - name: http
+    port: 28080
+    protocol: TCP
+    targetPort: http
+    
+  - name: https
+    port: 28443
+    protocol: TCP
+    targetPort: https
+    
+  selector:
+    app.kubernetes.io/name: "hono"
+    app.kubernetes.io/instance: "eclipse-hono"
+    app.kubernetes.io/component: "service-device-registry"
+  type: "LoadBalancer"
+---
+# Source: hono/templates/hono-service-device-registry-base/hono-service-device-registry-svc.yaml
+#
+# Copyright (c) 2019, 2020 Contributors to the Eclipse Foundation
+#
+# See the NOTICE file(s) distributed with this work for additional
+# information regarding copyright ownership.
+#
+# This program and the accompanying materials are made available under the
+# terms of the Eclipse Public License 2.0 which is available at
+# http://www.eclipse.org/legal/epl-2.0
+#
+# SPDX-License-Identifier: EPL-2.0
+#
+apiVersion: v1
+kind: Service
+metadata:
+  name: "eclipse-hono-service-device-registry"
+  namespace: "hono"
+  labels:
+    app.kubernetes.io/name: "hono"
+    helm.sh/chart: "hono-2.5.1"
+    app.kubernetes.io/managed-by: "Helm"
+    app.kubernetes.io/instance: "eclipse-hono"
+    app.kubernetes.io/version: "2.4.0"
+    app.kubernetes.io/component: "service-device-registry"
+spec:
+  ports:
+  - name: amqps
+    port: 5671
+    protocol: TCP
+    targetPort: amqps
+  - name: http
+    port: 8080
+    protocol: TCP
+    targetPort: http
+  - name: https
+    port: 8443
+    protocol: TCP
+    targetPort: https
+  selector:
+    app.kubernetes.io/name: "hono"
+    app.kubernetes.io/instance: "eclipse-hono"
+    app.kubernetes.io/component: "service-device-registry"
+---
+# Source: hono/templates/hono-adapter-http/hono-adapter-http-deployment.yaml
+#
+# Copyright (c) 2019, 2022 Contributors to the Eclipse Foundation
+#
+# See the NOTICE file(s) distributed with this work for additional
+# information regarding copyright ownership.
+#
+# This program and the accompanying materials are made available under the
+# terms of the Eclipse Public License 2.0 which is available at
+# http://www.eclipse.org/legal/epl-2.0
+#
+# SPDX-License-Identifier: EPL-2.0
+#
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: "eclipse-hono-adapter-http"
+  namespace: "hono"
+  labels:
+    app.kubernetes.io/name: "hono"
+    helm.sh/chart: "hono-2.5.1"
+    app.kubernetes.io/managed-by: "Helm"
+    app.kubernetes.io/instance: "eclipse-hono"
+    app.kubernetes.io/version: "2.4.0"
+    app.kubernetes.io/component: "adapter-http"  
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: "hono"
+      app.kubernetes.io/instance: "eclipse-hono"
+      app.kubernetes.io/component: "adapter-http"
+  template:
+    metadata:
+      name: "eclipse-hono-adapter-http"
+      namespace: "hono"
+      labels:
+        app.kubernetes.io/name: "hono"
+        helm.sh/chart: "hono-2.5.1"
+        app.kubernetes.io/managed-by: "Helm"
+        app.kubernetes.io/instance: "eclipse-hono"
+        app.kubernetes.io/version: "2.4.0"
+        app.kubernetes.io/component: "adapter-http"
+        
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/path: "/prometheus"
+        prometheus.io/port: "8088"
+        prometheus.io/scheme: "http"
+        kubectl.kubernetes.io/default-container: "adapter-http"
+        
+    spec:
+      containers:            
+      - name: "adapter-http"
+        image: "index.docker.io/eclipse/hono-adapter-http:2.4.0"
+        ports:
+        - name: health
+          containerPort: 8088
+          protocol: TCP
+        - name: http
+          containerPort: 8080
+          protocol: TCP
+        - name: https
+          containerPort: 8443
+          protocol: TCP
+        securityContext:
+          privileged: false
+        env:
+        - name: JDK_JAVA_OPTIONS
+          value: "-XX:MinRAMPercentage=80 -XX:MaxRAMPercentage=80"
+        - name: KUBERNETES_NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace        
+        - name: "QUARKUS_CONFIG_LOCATIONS"
+          value: "/opt/hono/default-logging-config/logging-quarkus-dev.yml"        
+        volumeMounts:        
+        - name: "default-logging-config"
+          mountPath: "/opt/hono/default-logging-config"
+          readOnly: true
+        - name: "adapter-http-conf"
+          mountPath: "/opt/hono/config"
+          readOnly: true
+        resources:
+          limits:
+            cpu: "1"
+            memory: 512Mi
+          requests:
+            cpu: 150m
+            memory: 300Mi
+        livenessProbe:
+          httpGet:
+            path: /liveness
+            port: health
+            scheme: HTTP
+          periodSeconds: 10
+          failureThreshold: 3
+          initialDelaySeconds: 300
+          successThreshold: 1
+          timeoutSeconds: 3
+        readinessProbe:
+          httpGet:
+            path: /readiness
+            port: health
+            scheme: HTTP
+          periodSeconds: 10
+          failureThreshold: 3
+          initialDelaySeconds: 20
+          successThreshold: 1
+          timeoutSeconds: 3
+      volumes:      
+      - name: "default-logging-config"
+        configMap:
+          name: "eclipse-hono-default-logging-config"
+          optional: true
+      - name: "adapter-http-conf"
+        secret:
+          secretName: "eclipse-hono-adapter-http-conf"
+---
+# Source: hono/templates/hono-service-auth/hono-service-auth-deployment.yaml
+#
+# Copyright (c) 2019, 2022 Contributors to the Eclipse Foundation
+#
+# See the NOTICE file(s) distributed with this work for additional
+# information regarding copyright ownership.
+#
+# This program and the accompanying materials are made available under the
+# terms of the Eclipse Public License 2.0 which is available at
+# http://www.eclipse.org/legal/epl-2.0
+#
+# SPDX-License-Identifier: EPL-2.0
+#
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: "eclipse-hono-service-auth"
+  namespace: "hono"
+  labels:
+    app.kubernetes.io/name: "hono"
+    helm.sh/chart: "hono-2.5.1"
+    app.kubernetes.io/managed-by: "Helm"
+    app.kubernetes.io/instance: "eclipse-hono"
+    app.kubernetes.io/version: "2.4.0"
+    app.kubernetes.io/component: "service-auth"  
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: "hono"
+      app.kubernetes.io/instance: "eclipse-hono"
+      app.kubernetes.io/component: "service-auth"
+  template:
+    metadata:
+      name: "eclipse-hono-service-auth"
+      namespace: "hono"
+      labels:
+        app.kubernetes.io/name: "hono"
+        helm.sh/chart: "hono-2.5.1"
+        app.kubernetes.io/managed-by: "Helm"
+        app.kubernetes.io/instance: "eclipse-hono"
+        app.kubernetes.io/version: "2.4.0"
+        app.kubernetes.io/component: "service-auth"
+        
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/path: "/prometheus"
+        prometheus.io/port: "8088"
+        prometheus.io/scheme: "http"
+        kubectl.kubernetes.io/default-container: "service-auth"
+        
+    spec:
+      containers:      
+      - name: "service-auth"
+        image: "index.docker.io/eclipse/hono-service-auth:2.4.0"
+        ports:
+        - name: health
+          containerPort: 8088
+          protocol: TCP
+        - name: amqps
+          containerPort: 5671
+          protocol: TCP
+        - name: amqp
+          containerPort: 5672
+          protocol: TCP
+        securityContext:
+          privileged: false
+        env:
+        - name: JDK_JAVA_OPTIONS
+          value: "-XX:MinRAMPercentage=80 -XX:MaxRAMPercentage=80"
+        - name: KUBERNETES_NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace        
+        - name: "QUARKUS_CONFIG_LOCATIONS"
+          value: "/opt/hono/default-logging-config/logging-quarkus-dev.yml"        
+        volumeMounts:        
+        - name: "tls-keys"
+          mountPath: "/opt/hono/tls/tls.key"
+          subPath: "tls.key"
+          readOnly: true
+        - name: "tls-keys"
+          mountPath: "/opt/hono/tls/tls.crt"
+          subPath: "tls.crt"
+          readOnly: true
+        - name: "default-logging-config"
+          mountPath: "/opt/hono/default-logging-config"
+          readOnly: true
+        - name: "service-auth-conf"
+          mountPath: "/opt/hono/config"
+          readOnly: true
+        resources:
+          limits:
+            cpu: "1"
+            memory: 256Mi
+          requests:
+            cpu: 100m
+            memory: 196Mi
+        livenessProbe:
+          httpGet:
+            path: /liveness
+            port: health
+            scheme: HTTP
+          periodSeconds: 10
+          failureThreshold: 3
+          initialDelaySeconds: 300
+          successThreshold: 1
+          timeoutSeconds: 3
+        readinessProbe:
+          httpGet:
+            path: /readiness
+            port: health
+            scheme: HTTP
+          periodSeconds: 10
+          failureThreshold: 3
+          initialDelaySeconds: 20
+          successThreshold: 1
+          timeoutSeconds: 3
+      volumes:      
+      - name: "tls-keys"
+        secret:
+          secretName: "eclipse-hono-service-auth-example-keys"
+      - name: "default-logging-config"
+        configMap:
+          name: "eclipse-hono-default-logging-config"
+          optional: true
+      - name: "service-auth-conf"
+        secret:
+          secretName: "eclipse-hono-service-auth-conf"
+---
+# Source: hono/templates/hono-service-command-router/hono-service-command-router-deployment.yaml
+#
+# Copyright (c) 2021, 2022 Contributors to the Eclipse Foundation
+#
+# See the NOTICE file(s) distributed with this work for additional
+# information regarding copyright ownership.
+#
+# This program and the accompanying materials are made available under the
+# terms of the Eclipse Public License 2.0 which is available at
+# http://www.eclipse.org/legal/epl-2.0
+#
+# SPDX-License-Identifier: EPL-2.0
+#
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: "eclipse-hono-service-command-router"
+  namespace: "hono"
+  labels:
+    app.kubernetes.io/name: "hono"
+    helm.sh/chart: "hono-2.5.1"
+    app.kubernetes.io/managed-by: "Helm"
+    app.kubernetes.io/instance: "eclipse-hono"
+    app.kubernetes.io/version: "2.4.0"
+    app.kubernetes.io/component: "service-command-router"  
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: "hono"
+      app.kubernetes.io/instance: "eclipse-hono"
+      app.kubernetes.io/component: "service-command-router"
+  template:
+    metadata:
+      name: "eclipse-hono-service-command-router"
+      namespace: "hono"
+      labels:
+        app.kubernetes.io/name: "hono"
+        helm.sh/chart: "hono-2.5.1"
+        app.kubernetes.io/managed-by: "Helm"
+        app.kubernetes.io/instance: "eclipse-hono"
+        app.kubernetes.io/version: "2.4.0"
+        app.kubernetes.io/component: "service-command-router"
+        
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/path: "/prometheus"
+        prometheus.io/port: "8088"
+        prometheus.io/scheme: "http"
+        kubectl.kubernetes.io/default-container: "service-command-router"
+        
+    spec:
+      containers:            
+      - name: "service-command-router"
+        image: "index.docker.io/eclipse/hono-service-command-router:2.4.0"
+        ports:
+        - name: health
+          containerPort: 8088
+          protocol: TCP
+        - name: amqps
+          containerPort: 5671
+          protocol: TCP
+        - name: amqp
+          containerPort: 5672
+          protocol: TCP
+        securityContext:
+          privileged: false
+        env:
+        - name: JDK_JAVA_OPTIONS
+          value: "-XX:MinRAMPercentage=80 -XX:MaxRAMPercentage=80 -Djava.security.properties=/opt/hono/config/dns-cache-config.properties"
+        - name: KUBERNETES_NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace        
+        - name: "QUARKUS_CONFIG_LOCATIONS"
+          value: "/opt/hono/default-logging-config/logging-quarkus-dev.yml"        
+        volumeMounts:        
+        - name: "tls-keys"
+          mountPath: "/opt/hono/tls/tls.key"
+          subPath: "tls.key"
+          readOnly: true
+        - name: "tls-keys"
+          mountPath: "/opt/hono/tls/tls.crt"
+          subPath: "tls.crt"
+          readOnly: true
+        - name: "tls-trust-store"
+          mountPath: "/opt/hono/tls/ca.crt"
+          subPath: "ca.crt"
+          readOnly: true
+        - name: "default-logging-config"
+          mountPath: "/opt/hono/default-logging-config"
+          readOnly: true
+        - name: "service-command-router-conf"
+          mountPath: "/opt/hono/config"
+          readOnly: true
+        resources:
+          limits:
+            cpu: "1"
+            memory: 512Mi
+          requests:
+            cpu: 150m
+            memory: 256Mi
+        livenessProbe:
+          httpGet:
+            path: /liveness
+            port: health
+            scheme: HTTP
+          periodSeconds: 10
+          failureThreshold: 3
+          initialDelaySeconds: 300
+          successThreshold: 1
+          timeoutSeconds: 3
+        readinessProbe:
+          httpGet:
+            path: /readiness
+            port: health
+            scheme: HTTP
+          periodSeconds: 10
+          failureThreshold: 3
+          initialDelaySeconds: 20
+          successThreshold: 1
+          timeoutSeconds: 3
+      volumes:      
+      - name: "tls-keys"
+        secret:
+          secretName: "eclipse-hono-service-command-router-example-keys"
+      - name: "tls-trust-store"
+        configMap:
+          name: "eclipse-hono-example-trust-store"
+      - name: "default-logging-config"
+        configMap:
+          name: "eclipse-hono-default-logging-config"
+          optional: true
+      - name: "service-command-router-conf"
+        secret:
+          secretName: "eclipse-hono-service-command-router-conf"
+      serviceAccountName: "eclipse-hono-service-command-router"
+---
+# Source: hono/templates/hono-service-device-registry-mongodb/hono-service-device-registry-deployment.yaml
+#
+# Copyright (c) 2020, 2022 Contributors to the Eclipse Foundation
+#
+# See the NOTICE file(s) distributed with this work for additional
+# information regarding copyright ownership.
+#
+# This program and the accompanying materials are made available under the
+# terms of the Eclipse Public License 2.0 which is available at
+# http://www.eclipse.org/legal/epl-2.0
+#
+# SPDX-License-Identifier: EPL-2.0
+#
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: "eclipse-hono-service-device-registry"
+  namespace: "hono"
+  labels:
+    app.kubernetes.io/name: "hono"
+    helm.sh/chart: "hono-2.5.1"
+    app.kubernetes.io/managed-by: "Helm"
+    app.kubernetes.io/instance: "eclipse-hono"
+    app.kubernetes.io/version: "2.4.0"
+    app.kubernetes.io/component: "service-device-registry"  
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: "hono"
+      app.kubernetes.io/instance: "eclipse-hono"
+      app.kubernetes.io/component: "service-device-registry"
+  template:
+    metadata:
+      name: "eclipse-hono-service-device-registry"
+      namespace: "hono"
+      labels:
+        app.kubernetes.io/name: "hono"
+        helm.sh/chart: "hono-2.5.1"
+        app.kubernetes.io/managed-by: "Helm"
+        app.kubernetes.io/instance: "eclipse-hono"
+        app.kubernetes.io/version: "2.4.0"
+        app.kubernetes.io/component: "service-device-registry"
+        
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/path: "/prometheus"
+        prometheus.io/port: "8088"
+        prometheus.io/scheme: "http"
+        kubectl.kubernetes.io/default-container: "service-device-registry"
+        
+    spec:
+      containers:            
+      - name: "service-device-registry"
+        image: "index.docker.io/eclipse/hono-service-device-registry-mongodb:2.4.0"
+        ports:
+          - name: health
+            containerPort: 8088
+            protocol: TCP
+          - name: http
+            containerPort: 8080
+            protocol: TCP
+          - name: https
+            containerPort: 8443
+            protocol: TCP
+          - name: amqps
+            containerPort: 5671
+            protocol: TCP
+          - name: amqp
+            containerPort: 5672
+            protocol: TCP
+        env:
+        - name: JDK_JAVA_OPTIONS
+          value: "-XX:MinRAMPercentage=80 -XX:MaxRAMPercentage=80"
+        - name: KUBERNETES_NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace        
+        - name: "QUARKUS_CONFIG_LOCATIONS"
+          value: "/opt/hono/default-logging-config/logging-quarkus-dev.yml"        
+        securityContext:
+          privileged: false
+        volumeMounts:        
+        - name: "default-logging-config"
+          mountPath: "/opt/hono/default-logging-config"
+          readOnly: true
+        - name: "service-device-registry-conf"
+          mountPath: "/opt/hono/config"
+          readOnly: true
+        resources:
+          limits:
+            cpu: "1"
+            memory: 400Mi
+          requests:
+            cpu: 150m
+            memory: 400Mi
+        livenessProbe:
+          httpGet:
+            path: /liveness
+            port: health
+            scheme: HTTP
+          periodSeconds: 10
+          failureThreshold: 3
+          initialDelaySeconds: 300
+          successThreshold: 1
+          timeoutSeconds: 3
+        readinessProbe:
+          httpGet:
+            path: /readiness
+            port: health
+            scheme: HTTP
+          periodSeconds: 10
+          failureThreshold: 3
+          initialDelaySeconds: 20
+          successThreshold: 1
+          timeoutSeconds: 3
+      volumes:      
+      - name: "default-logging-config"
+        configMap:
+          name: "eclipse-hono-default-logging-config"
+          optional: true
+      - name: "service-device-registry-conf"
+        secret:
+          secretName: "eclipse-hono-service-device-registry-conf"
+---
+# Source: hono/templates/hono-service-device-registry-base/hono-service-device-registry-post-install-job.yaml
+#
+# Copyright (c) 2020, 2023 Contributors to the Eclipse Foundation
+#
+# See the NOTICE file(s) distributed with this work for additional
+# information regarding copyright ownership.
+#
+# This program and the accompanying materials are made available under the
+# terms of the Eclipse Public License 2.0 which is available at
+# http://www.eclipse.org/legal/epl-2.0
+#
+# SPDX-License-Identifier: EPL-2.0
+#
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: "eclipse-hono-post-install-device-registry-job"
+  namespace: "hono"
+  labels:
+    app.kubernetes.io/name: "hono"
+    helm.sh/chart: "hono-2.5.1"
+    app.kubernetes.io/managed-by: "Helm"
+    app.kubernetes.io/instance: "eclipse-hono"
+    app.kubernetes.io/version: "2.4.0"
+    app.kubernetes.io/component: "service-device-registry"
+  annotations:
+    # This is what defines this resource as a hook. Without this line, the
+    # job is considered part of the release.
+    helm.sh/hook: post-install
+    helm.sh/hook-weight: "-10"
+    helm.sh/hook-delete-policy: before-hook-creation,hook-succeeded
+spec:
+  template:
+    metadata:
+      name: "eclipse-hono-post-install"
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: "post-install"
+          image: "curlimages/curl:8.2.1"
+          imagePullPolicy: IfNotPresent
+          command:
+            - /bin/sh
+            - -c
+            - |
+              cd /var/run/hono/post-install-data/
+              ./add_example_data_device_registry.sh
+          volumeMounts:
+          - name: post-install-data
+            mountPath: "/var/run/hono/post-install-data"
+      volumes:
+      - name: post-install-data
+        configMap:
+          name: eclipse-hono-post-install-device-registry-conf
+          defaultMode: 0555

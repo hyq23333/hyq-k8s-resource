@@ -1,0 +1,202 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: "eclipse-hono-service-auth-example-keys"
+  namespace: "hono"
+  labels:
+    app.kubernetes.io/name: "hono"
+    app.kubernetes.io/instance: "eclipse-hono"
+    app.kubernetes.io/version: "2.4.0"
+    app.kubernetes.io/component: "service-auth"
+type: Opaque
+data:
+  tls.key: LS0tLS1CRUdJTiBQUklWQVRFIEtFWS0tLS0tCk1JR0hBZ0VBTUJNR0J5cUdTTTQ5QWdFR0NDcUdTTTQ5QXdFSEJHMHdhd0lCQVFRZ3Zxa2cveDYxOFZLZHdmWVoKNUhkYm1KNk5rdDlRREkvY0lxT3V2OWtIQm5TaFJBTkNBQVNOYmNKYmVEM04zR1Jhem93MVBWYm1lcFAycEJESgpwQTdweUhIbk9lTkxVZjh3QThTcHZIWC9RbDFwQVp4YjBEaGw1ZXIwZnJWcmhuNDJJZmQ1cmp1WgotLS0tLUVORCBQUklWQVRFIEtFWS0tLS0tCg==
+  tls.crt: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUNPakNDQWVHZ0F3SUJBZ0lVQjJ2eFdJOXdqMzJPSExhQUJWVitpdVZrZFNzd0NnWUlLb1pJemowRUF3SXcKVURFTE1Ba0dBMVVFQmhNQ1EwRXhEekFOQmdOVkJBY01CazkwZEdGM1lURVVNQklHQTFVRUNnd0xSV05zYVhCegpaU0JKYjFReERUQUxCZ05WQkFzTUJFaHZibTh4Q3pBSkJnTlZCQU1NQW1OaE1CNFhEVEl6TURZeU5EQTVNRFl3Ck1Gb1hEVEkwTURZeU16QTVNRFl3TUZvd1dURUxNQWtHQTFVRUJoTUNRMEV4RHpBTkJnTlZCQWNNQms5MGRHRjMKWVRFVU1CSUdBMVVFQ2d3TFJXTnNhWEJ6WlNCSmIxUXhEVEFMQmdOVkJBc01CRWh2Ym04eEZEQVNCZ05WQkFNTQpDMkYxZEdndGMyVnlkbVZ5TUZrd0V3WUhLb1pJemowQ0FRWUlLb1pJemowREFRY0RRZ0FFalczQ1czZzl6ZHhrCldzNk1OVDFXNW5xVDlxUVF5YVFPNmNoeDV6bmpTMUgvTUFQRXFieDEvMEpkYVFHY1c5QTRaZVhxOUg2MWE0WisKTmlIM2VhNDdtYU9CanpDQmpEQWRCZ05WSFE0RUZnUVVtZkJ0Y293czZrekNCaVBORDZjbmxVN1F5QkV3Q3dZRApWUjBQQkFRREFnT29NQjBHQTFVZEpRUVdNQlFHQ0NzR0FRVUZCd01CQmdnckJnRUZCUWNEQWpBL0JnTlZIUkVFCk9EQTJnaEZvYjI1dkxYTmxjblpwWTJVdFlYVjBhSUlXYUc5dWJ5MXpaWEoyYVdObExXRjFkR2d1YUc5dWI0SUoKYkc5allXeG9iM04wTUFvR0NDcUdTTTQ5QkFNQ0EwY0FNRVFDSUN1RG9oaHdFRG1nc3J6Vld2T2JVNElaTjEwZApMYU4wTmI1QzI1RVo2TmNXQWlCeFJzbTRTQ0YyK3F2OHBSRGZCZkhQZCtPMGxRWm8xMWhuRng0SWxaYUZ0QT09Ci0tLS0tRU5EIENFUlRJRklDQVRFLS0tLS0KLS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUI0ekNDQVltZ0F3SUJBZ0lVRHZmc2V2SHBGN09iUmVBQW1HWFhISHNBWEQwd0NnWUlLb1pJemowRUF3SXcKVWpFTE1Ba0dBMVVFQmhNQ1EwRXhEekFOQmdOVkJBY01CazkwZEdGM1lURVVNQklHQTFVRUNnd0xSV05zYVhCegpaU0JKYjFReERUQUxCZ05WQkFzTUJFaHZibTh4RFRBTEJnTlZCQU1NQkhKdmIzUXdIaGNOTWpNd05qSTBNRGt3Ck5qQXdXaGNOTWpRd05qSXpNRGt3TmpBd1dqQlFNUXN3Q1FZRFZRUUdFd0pEUVRFUE1BMEdBMVVFQnd3R1QzUjAKWVhkaE1SUXdFZ1lEVlFRS0RBdEZZMnhwY0hObElFbHZWREVOTUFzR0ExVUVDd3dFU0c5dWJ6RUxNQWtHQTFVRQpBd3dDWTJFd1dUQVRCZ2NxaGtqT1BRSUJCZ2dxaGtqT1BRTUJCd05DQUFRcGhvVjdaSlpnNzFWUmxkNjZQS2lXCk1IWWF0Zkw3MS94dWdoaFNzSGZlNEdZTkE2aDlwejZRYjBlOWg4S2o2dExURk5UaHZaMEU1MDJveTZlL0E1dHEKb3o4d1BUQWRCZ05WSFE0RUZnUVViQXlSUkNVM1lDcDdacTFUYkdlVy9mYWdxSEV3RHdZRFZSMFRBUUgvQkFVdwpBd0VCL3pBTEJnTlZIUThFQkFNQ0FRWXdDZ1lJS29aSXpqMEVBd0lEU0FBd1JRSWhBSmFxVXU0UVNMSzNwd0NkCk5MbXJLSG9sNmRYcWFLU29GVUtZVmRBU3NGc1JBaUJ2WDhYSElkUmsvQWVrY0RYNEFlakRnMVc1RWJ2UDVyMXQKS2lFc1YxbDFUdz09Ci0tLS0tRU5EIENFUlRJRklDQVRFLS0tLS0K
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: "eclipse-hono-service-auth-conf"
+  namespace: "hono"
+  labels:
+    app.kubernetes.io/name: "hono"
+    app.kubernetes.io/instance: "eclipse-hono"
+    app.kubernetes.io/version: "2.4.0"
+    app.kubernetes.io/component: "service-auth"
+type: Opaque
+stringData:
+  application.yml: |
+    hono:
+      app:
+        maxInstances: 1
+      auth:
+        amqp:
+          bindAddress: "127.0.0.1"
+          insecurePortBindAddress: "0.0.0.0"
+          insecurePortEnabled: true
+          keyPath: "/opt/hono/tls/tls.key"
+          certPath: "/opt/hono/tls/tls.crt"
+        svc:
+          permissionsPath: file:///opt/hono/config/permissions.json
+          signing:
+            tokenExpiration: 3600
+          supportedSaslMechanisms: PLAIN    
+    quarkus:
+      console:
+        color: false
+      log:
+        min-level: TRACE
+        level: INFO
+        category:
+          "io.quarkus.vertx.core.runtime":
+            level: DEBUG
+      vertx:
+        prefer-native-transport: true
+        resolver:
+          cache-max-time-to-live: 0
+data:
+  permissions.json: ewogICJyb2xlcyI6IHsKICAgICJwcm90b2NvbC1hZGFwdGVyIjogWwogICAgICB7CiAgICAgICAgInJlc291cmNlIjogInRlbGVtZXRyeS8qIiwKICAgICAgICAiYWN0aXZpdGllcyI6IFsgIldSSVRFIiBdCiAgICAgIH0sCiAgICAgIHsKICAgICAgICAicmVzb3VyY2UiOiAiZXZlbnQvKiIsCiAgICAgICAgImFjdGl2aXRpZXMiOiBbICJXUklURSIgXQogICAgICB9LAogICAgICB7CiAgICAgICAgInJlc291cmNlIjogInJlZ2lzdHJhdGlvbi8qIiwKICAgICAgICAiYWN0aXZpdGllcyI6IFsgIlJFQUQiLCAiV1JJVEUiIF0KICAgICAgfSwKICAgICAgewogICAgICAgICJvcGVyYXRpb24iOiAicmVnaXN0cmF0aW9uLyo6YXNzZXJ0IiwKICAgICAgICAiYWN0aXZpdGllcyI6IFsgIkVYRUNVVEUiIF0KICAgICAgfSwKICAgICAgewogICAgICAgICJvcGVyYXRpb24iOiAicmVnaXN0cmF0aW9uLyo6Z2V0IiwKICAgICAgICAiYWN0aXZpdGllcyI6IFsgIkVYRUNVVEUiIF0KICAgICAgfSwKICAgICAgewogICAgICAgICJyZXNvdXJjZSI6ICJjcmVkZW50aWFscy8qIiwKICAgICAgICAiYWN0aXZpdGllcyI6IFsgIlJFQUQiLCAiV1JJVEUiIF0KICAgICAgfSwKICAgICAgewogICAgICAgICJvcGVyYXRpb24iOiAiY3JlZGVudGlhbHMvKjpnZXQiLAogICAgICAgICJhY3Rpdml0aWVzIjogWyAiRVhFQ1VURSIgXQogICAgICB9LAogICAgICB7CiAgICAgICAgInJlc291cmNlIjogInRlbmFudCIsCiAgICAgICAgImFjdGl2aXRpZXMiOiBbICJSRUFEIiwgIldSSVRFIiBdCiAgICAgIH0sCiAgICAgIHsKICAgICAgICAib3BlcmF0aW9uIjogInRlbmFudC8qOioiLAogICAgICAgICJhY3Rpdml0aWVzIjogWyAiRVhFQ1VURSIgXQogICAgICB9LAogICAgICB7CiAgICAgICAgInJlc291cmNlIjogImNtZF9yb3V0ZXIvKiIsCiAgICAgICAgImFjdGl2aXRpZXMiOiBbICJSRUFEIiwgIldSSVRFIiBdCiAgICAgIH0sCiAgICAgIHsKICAgICAgICAib3BlcmF0aW9uIjogImNtZF9yb3V0ZXIvKjoqIiwKICAgICAgICAiYWN0aXZpdGllcyI6IFsgIkVYRUNVVEUiIF0KICAgICAgfSwKICAgICAgewogICAgICAgICJyZXNvdXJjZSI6ICJkZXZpY2VfY29uLyoiLAogICAgICAgICJhY3Rpdml0aWVzIjogWyAiUkVBRCIsICJXUklURSIgXQogICAgICB9LAogICAgICB7CiAgICAgICAgIm9wZXJhdGlvbiI6ICJkZXZpY2VfY29uLyo6KiIsCiAgICAgICAgImFjdGl2aXRpZXMiOiBbICJFWEVDVVRFIiBdCiAgICAgIH0KICAgIF0sCiAgICAiY29tbWFuZC1yb3V0ZXIiOiBbCiAgICAgIHsKICAgICAgICAicmVzb3VyY2UiOiAidGVuYW50IiwKICAgICAgICAiYWN0aXZpdGllcyI6IFsgIlJFQUQiLCAiV1JJVEUiIF0KICAgICAgfSwKICAgICAgewogICAgICAgICJvcGVyYXRpb24iOiAidGVuYW50Lyo6KiIsCiAgICAgICAgImFjdGl2aXRpZXMiOiBbICJFWEVDVVRFIiBdCiAgICAgIH0sCiAgICAgIHsKICAgICAgICAicmVzb3VyY2UiOiAicmVnaXN0cmF0aW9uLyoiLAogICAgICAgICJhY3Rpdml0aWVzIjogWyAiUkVBRCIsICJXUklURSIgXQogICAgICB9LAogICAgICB7CiAgICAgICAgIm9wZXJhdGlvbiI6ICJyZWdpc3RyYXRpb24vKjoqIiwKICAgICAgICAiYWN0aXZpdGllcyI6IFsgIkVYRUNVVEUiIF0KICAgICAgfQogICAgXSwKICAgICJkZXZpY2UtbWFuYWdlciI6IFsKICAgICAgewogICAgICAgICJyZXNvdXJjZSI6ICJyZWdpc3RyYXRpb24vKiIsCiAgICAgICAgImFjdGl2aXRpZXMiOiBbICJSRUFEIiwgIldSSVRFIiBdCiAgICAgIH0sCiAgICAgIHsKICAgICAgICAib3BlcmF0aW9uIjogInJlZ2lzdHJhdGlvbi8qOioiLAogICAgICAgICJhY3Rpdml0aWVzIjogWyAiRVhFQ1VURSIgXQogICAgICB9CiAgICBdLAogICAgImFwcGxpY2F0aW9uIjogWwogICAgICB7CiAgICAgICAgInJlc291cmNlIjogInRlbGVtZXRyeS8qIiwKICAgICAgICAiYWN0aXZpdGllcyI6IFsgIlJFQUQiIF0KICAgICAgfSwKICAgICAgewogICAgICAgICJyZXNvdXJjZSI6ICJldmVudC8qIiwKICAgICAgICAiYWN0aXZpdGllcyI6IFsgIlJFQUQiIF0KICAgICAgfSwKICAgICAgewogICAgICAgICJyZXNvdXJjZSI6ICJjb250cm9sLyoiLAogICAgICAgICJhY3Rpdml0aWVzIjogWyAiUkVBRCIsICJXUklURSIgXQogICAgICB9LAogICAgICB7CiAgICAgICAgInJlc291cmNlIjogImNvbW1hbmQvKiIsCiAgICAgICAgImFjdGl2aXRpZXMiOiBbICJXUklURSIgXQogICAgICB9LAogICAgICB7CiAgICAgICAgInJlc291cmNlIjogImNvbW1hbmRfcmVzcG9uc2UvKiIsCiAgICAgICAgImFjdGl2aXRpZXMiOiBbICJSRUFEIiBdCiAgICAgIH0KICAgIF0KICB9LAogICJ1c2VycyI6IHsKICAgICJjb2FwLWFkYXB0ZXJASE9OTyI6IHsKICAgICAgIm1lY2hhbmlzbSI6ICJQTEFJTiIsCiAgICAgICJwYXNzd29yZCI6ICJjb2FwLXNlY3JldCIsCiAgICAgICJhdXRob3JpdGllcyI6IFsgImhvbm8tY29tcG9uZW50IiwgInByb3RvY29sLWFkYXB0ZXIiIF0KICAgIH0sCiAgICAiaHR0cC1hZGFwdGVyQEhPTk8iOiB7CiAgICAgICJtZWNoYW5pc20iOiAiUExBSU4iLAogICAgICAicGFzc3dvcmQiOiAiaHR0cC1zZWNyZXQiLAogICAgICAiYXV0aG9yaXRpZXMiOiBbICJob25vLWNvbXBvbmVudCIsICJwcm90b2NvbC1hZGFwdGVyIiBdCiAgICB9LAogICAgImxvcmEtYWRhcHRlckBIT05PIjogewogICAgICAibWVjaGFuaXNtIjogIlBMQUlOIiwKICAgICAgInBhc3N3b3JkIjogImxvcmEtc2VjcmV0IiwKICAgICAgImF1dGhvcml0aWVzIjogWyAiaG9uby1jb21wb25lbnQiLCAicHJvdG9jb2wtYWRhcHRlciIgXQogICAgfSwKICAgICJtcXR0LWFkYXB0ZXJASE9OTyI6IHsKICAgICAgIm1lY2hhbmlzbSI6ICJQTEFJTiIsCiAgICAgICJwYXNzd29yZCI6ICJtcXR0LXNlY3JldCIsCiAgICAgICJhdXRob3JpdGllcyI6IFsgImhvbm8tY29tcG9uZW50IiwgInByb3RvY29sLWFkYXB0ZXIiIF0KICAgIH0sCiAgICAiYW1xcC1hZGFwdGVyQEhPTk8iOiB7CiAgICAgICJtZWNoYW5pc20iOiAiUExBSU4iLAogICAgICAicGFzc3dvcmQiOiAiYW1xcC1zZWNyZXQiLAogICAgICAiYXV0aG9yaXRpZXMiOiBbICJob25vLWNvbXBvbmVudCIsICJwcm90b2NvbC1hZGFwdGVyIiBdCiAgICB9LAogICAgImNvbW1hbmQtcm91dGVyQEhPTk8iOiB7CiAgICAgICJtZWNoYW5pc20iOiAiUExBSU4iLAogICAgICAicGFzc3dvcmQiOiAiY21kLXJvdXRlci1zZWNyZXQiLAogICAgICAiYXV0aG9yaXRpZXMiOiBbICJob25vLWNvbXBvbmVudCIsICJjb21tYW5kLXJvdXRlciIgXQogICAgfSwKICAgICJob25vLWNsaWVudEBIT05PIjogewogICAgICAibWVjaGFuaXNtIjogIlBMQUlOIiwKICAgICAgInBhc3N3b3JkIjogInNlY3JldCIsCiAgICAgICJhdXRob3JpdGllcyI6IFsgInByb3RvY29sLWFkYXB0ZXIiLCAiZGV2aWNlLW1hbmFnZXIiIF0KICAgIH0sCiAgICAiZGV2aWNlLXJlZ2lzdHJ5IjogewogICAgICAibWVjaGFuaXNtIjogIkVYVEVSTkFMIiwKICAgICAgImF1dGhvcml0aWVzIjogW10KICAgIH0sCiAgICAiY29uc3VtZXJASE9OTyI6IHsKICAgICAgIm1lY2hhbmlzbSI6ICJQTEFJTiIsCiAgICAgICJwYXNzd29yZCI6ICJ2ZXJ5c2VjcmV0IiwKICAgICAgImF1dGhvcml0aWVzIjogWyAiYXBwbGljYXRpb24iIF0KICAgIH0KICB9Cn0K
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: "eclipse-hono-service-auth"
+  namespace: "hono"
+  labels:
+    app.kubernetes.io/name: "hono"
+    app.kubernetes.io/instance: "eclipse-hono"
+    app.kubernetes.io/version: "2.4.0"
+    app.kubernetes.io/component: "service-auth"
+spec:
+  clusterIP: None
+  ports:
+    - name: amqp
+      port: 5672
+      protocol: TCP
+      targetPort: ampq
+    - name: amqps
+      port: 5671
+      protocol: TCP
+      targetPort: amqps
+    - name: validation-keys
+      port: 8088
+      protocol: TCP
+      targetPort: health
+  selector:
+    app.kubernetes.io/name: "hono"
+    app.kubernetes.io/instance: "eclipse-hono"
+    app.kubernetes.io/component: "service-auth"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: "eclipse-hono-service-auth"
+  namespace: "hono"
+  labels:
+    app.kubernetes.io/name: "hono"
+    app.kubernetes.io/instance: "eclipse-hono"
+    app.kubernetes.io/version: "2.4.0"
+    app.kubernetes.io/component: "service-auth"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: "hono"
+      app.kubernetes.io/instance: "eclipse-hono"
+      app.kubernetes.io/component: "service-auth"
+  template:
+    metadata:
+      name: "eclipse-hono-service-auth"
+      namespace: "hono"
+      labels:
+        app.kubernetes.io/name: "hono"
+        app.kubernetes.io/instance: "eclipse-hono"
+        app.kubernetes.io/version: "2.4.0"
+        app.kubernetes.io/component: "service-auth"
+
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/path: "/prometheus"
+        prometheus.io/port: "8088"
+        prometheus.io/scheme: "http"
+        kubectl.kubernetes.io/default-container: "service-auth"
+
+    spec:
+      containers:
+        - name: "service-auth"
+          image: "index.docker.io/eclipse/hono-service-auth:2.4.0"
+          ports:
+            - name: health
+              containerPort: 8088
+              protocol: TCP
+            - name: amqps
+              containerPort: 5671
+              protocol: TCP
+            - name: amqp
+              containerPort: 5672
+              protocol: TCP
+          securityContext:
+            privileged: false
+          env:
+            - name: JDK_JAVA_OPTIONS
+              value: "-XX:MinRAMPercentage=80 -XX:MaxRAMPercentage=80"
+            - name: KUBERNETES_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: "QUARKUS_CONFIG_LOCATIONS"
+              value: "/opt/hono/default-logging-config/logging-quarkus-dev.yml"
+          volumeMounts:
+            - name: "tls-keys"
+              mountPath: "/opt/hono/tls/tls.key"
+              subPath: "tls.key"
+              readOnly: true
+            - name: "tls-keys"
+              mountPath: "/opt/hono/tls/tls.crt"
+              subPath: "tls.crt"
+              readOnly: true
+            - name: "default-logging-config"
+              mountPath: "/opt/hono/default-logging-config"
+              readOnly: true
+            - name: "service-auth-conf"
+              mountPath: "/opt/hono/config"
+              readOnly: true
+          resources:
+            limits:
+              cpu: "1"
+              memory: 256Mi
+            requests:
+              cpu: 100m
+              memory: 196Mi
+          livenessProbe:
+            httpGet:
+              path: /liveness
+              port: health
+              scheme: HTTP
+            periodSeconds: 10
+            failureThreshold: 3
+            initialDelaySeconds: 300
+            successThreshold: 1
+            timeoutSeconds: 3
+          readinessProbe:
+            httpGet:
+              path: /readiness
+              port: health
+              scheme: HTTP
+            periodSeconds: 10
+            failureThreshold: 3
+            initialDelaySeconds: 20
+            successThreshold: 1
+            timeoutSeconds: 3
+      volumes:
+        - name: "tls-keys"
+          secret:
+            secretName: "eclipse-hono-service-auth-example-keys"
+        - name: "default-logging-config"
+          configMap:
+            name: "eclipse-hono-default-logging-config"
+            optional: true
+        - name: "service-auth-conf"
+          secret:
+            secretName: "eclipse-hono-service-auth-conf"
+---

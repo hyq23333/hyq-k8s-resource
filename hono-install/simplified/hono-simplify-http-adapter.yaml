@@ -1,0 +1,246 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: "eclipse-hono-adapter-http-example-keys"
+  namespace: "hono"
+  labels:
+    app.kubernetes.io/name: "hono"
+    app.kubernetes.io/instance: "eclipse-hono"
+    app.kubernetes.io/version: "2.4.0"
+    app.kubernetes.io/component: "adapter-http"
+type: Opaque
+data:
+  tls.key: LS0tLS1CRUdJTiBQUklWQVRFIEtFWS0tLS0tCk1JR0hBZ0VBTUJNR0J5cUdTTTQ5QWdFR0NDcUdTTTQ5QXdFSEJHMHdhd0lCQVFRZzhZbXI5dkFDMUEzTnVZQloKT2ZyWWpUNzlLYWhSUWo3MVFsOE44Uk1IMHVDaFJBTkNBQVFtd0x1VDR1L0grc2pWUjVpM0NSWEpycnV6bHhhdApUdjBBRkp3U2dUQXNvbG9FalhYRitzdktEZ0puYjE4MHJzWFRndUFMY0h2MVc0RzlYS1ZDVzRGKwotLS0tLUVORCBQUklWQVRFIEtFWS0tLS0tCg==
+  tls.crt: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUNQRENDQWVLZ0F3SUJBZ0lVQjJ2eFdJOXdqMzJPSExhQUJWVitpdVZrZFM0d0NnWUlLb1pJemowRUF3SXcKVURFTE1Ba0dBMVVFQmhNQ1EwRXhEekFOQmdOVkJBY01CazkwZEdGM1lURVVNQklHQTFVRUNnd0xSV05zYVhCegpaU0JKYjFReERUQUxCZ05WQkFzTUJFaHZibTh4Q3pBSkJnTlZCQU1NQW1OaE1CNFhEVEl6TURZeU5EQTVNRFl3Ck1Gb1hEVEkwTURZeU16QTVNRFl3TUZvd1dqRUxNQWtHQTFVRUJoTUNRMEV4RHpBTkJnTlZCQWNNQms5MGRHRjMKWVRFVU1CSUdBMVVFQ2d3TFJXTnNhWEJ6WlNCSmIxUXhEVEFMQmdOVkJBc01CRWh2Ym04eEZUQVRCZ05WQkFNTQpER2gwZEhBdFlXUmhjSFJsY2pCWk1CTUdCeXFHU000OUFnRUdDQ3FHU000OUF3RUhBMElBQkNiQXU1UGk3OGY2CnlOVkhtTGNKRmNtdXU3T1hGcTFPL1FBVW5CS0JNQ3lpV2dTTmRjWDZ5OG9PQW1kdlh6U3V4ZE9DNEF0d2UvVmIKZ2IxY3BVSmJnWDZqZ1k4d2dZd3dIUVlEVlIwT0JCWUVGRDJwQ211Z2lrMmlIZElOeWZYUVVHTDRQZStBTUFzRwpBMVVkRHdRRUF3SURxREFkQmdOVkhTVUVGakFVQmdnckJnRUZCUWNEQVFZSUt3WUJCUVVIQXdJd1B3WURWUjBSCkJEZ3dOb0lSYUc5dWJ5MWhaR0Z3ZEdWeUxXaDBkSENDRm1odmJtOHRZV1JoY0hSbGNpMW9kSFJ3TG1odmJtK0MKQ1d4dlkyRnNhRzl6ZERBS0JnZ3Foa2pPUFFRREFnTklBREJGQWlCWEJkQU1ibXZUY1FUL2dQRHBmRWZnaFYxOQpWK0J6Uzh1YTFGTzExUWY1a1FJaEFKMFlKVm4vREZTN2ZhMlFLS1JGbTNDcDMwQkdQeGhCRWFVZkJZN1NGZW1YCi0tLS0tRU5EIENFUlRJRklDQVRFLS0tLS0KLS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUI0ekNDQVltZ0F3SUJBZ0lVRHZmc2V2SHBGN09iUmVBQW1HWFhISHNBWEQwd0NnWUlLb1pJemowRUF3SXcKVWpFTE1Ba0dBMVVFQmhNQ1EwRXhEekFOQmdOVkJBY01CazkwZEdGM1lURVVNQklHQTFVRUNnd0xSV05zYVhCegpaU0JKYjFReERUQUxCZ05WQkFzTUJFaHZibTh4RFRBTEJnTlZCQU1NQkhKdmIzUXdIaGNOTWpNd05qSTBNRGt3Ck5qQXdXaGNOTWpRd05qSXpNRGt3TmpBd1dqQlFNUXN3Q1FZRFZRUUdFd0pEUVRFUE1BMEdBMVVFQnd3R1QzUjAKWVhkaE1SUXdFZ1lEVlFRS0RBdEZZMnhwY0hObElFbHZWREVOTUFzR0ExVUVDd3dFU0c5dWJ6RUxNQWtHQTFVRQpBd3dDWTJFd1dUQVRCZ2NxaGtqT1BRSUJCZ2dxaGtqT1BRTUJCd05DQUFRcGhvVjdaSlpnNzFWUmxkNjZQS2lXCk1IWWF0Zkw3MS94dWdoaFNzSGZlNEdZTkE2aDlwejZRYjBlOWg4S2o2dExURk5UaHZaMEU1MDJveTZlL0E1dHEKb3o4d1BUQWRCZ05WSFE0RUZnUVViQXlSUkNVM1lDcDdacTFUYkdlVy9mYWdxSEV3RHdZRFZSMFRBUUgvQkFVdwpBd0VCL3pBTEJnTlZIUThFQkFNQ0FRWXdDZ1lJS29aSXpqMEVBd0lEU0FBd1JRSWhBSmFxVXU0UVNMSzNwd0NkCk5MbXJLSG9sNmRYcWFLU29GVUtZVmRBU3NGc1JBaUJ2WDhYSElkUmsvQWVrY0RYNEFlakRnMVc1RWJ2UDVyMXQKS2lFc1YxbDFUdz09Ci0tLS0tRU5EIENFUlRJRklDQVRFLS0tLS0K
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: "eclipse-hono-adapter-http-conf"
+  namespace: "hono"
+  labels:
+    app.kubernetes.io/name: "hono"
+    app.kubernetes.io/instance: "eclipse-hono"
+    app.kubernetes.io/version: "2.4.0"
+    app.kubernetes.io/component: "adapter-http"
+type: Opaque
+stringData:
+  application.yml: |
+    hono:
+      app:
+        maxInstances: 1
+      http:
+        bindAddress: "0.0.0.0"
+        insecurePortBindAddress: "0.0.0.0"
+        insecurePortEnabled: true
+        tenantIdleTimeout: "1h"
+      kafka:
+        commonClientConfig:
+          bootstrap.servers: "hono-kafka-broker.hono:9092"
+        notification:
+          consumerConfig:
+            compression.type: none
+        command:
+          consumerConfig:
+            compression.type: none
+        commandInternal:
+          adminClientConfig:
+            compression.type: none
+        commandResponse:
+          producerConfig:
+            compression.type: none
+        event:
+          producerConfig:
+            compression.type: none
+        notification:
+          consumerConfig:
+            compression.type: none
+        telemetry:
+          producerConfig:
+            compression.type: none
+      commandRouter:
+        host: "eclipse-hono-service-command-router.hono"
+        port: 5672
+        credentialsPath: "/opt/hono/config/adapter.credentials"
+        hostnameVerificationRequired: false  
+      registration:
+        host: "eclipse-hono-service-device-registry.hono"
+        port: 5672
+        connectTimeout: 10000
+        hostnameVerificationRequired: false
+        tlsEnabled: false
+        credentialsPath: "/opt/hono/config/adapter.credentials"
+      tenant:
+        host: "eclipse-hono-service-device-registry.hono"
+        port: 5672
+        connectTimeout: 10000
+        hostnameVerificationRequired: false
+        tlsEnabled: false
+        credentialsPath: "/opt/hono/config/adapter.credentials"
+      credentials:
+        host: "eclipse-hono-service-device-registry.hono"
+        port: 5672
+        connectTimeout: 10000
+        hostnameVerificationRequired: false
+        tlsEnabled: false
+        credentialsPath: "/opt/hono/config/adapter.credentials"
+    
+    quarkus:
+      console:
+        color: false
+      log:
+        min-level: TRACE
+        level: INFO
+        category:
+          "io.quarkus.vertx.core.runtime":
+            level: DEBUG
+      vertx:
+        prefer-native-transport: true
+        resolver:
+          cache-max-time-to-live: 0
+data:
+  adapter.credentials: dXNlcm5hbWU9aHR0cC1hZGFwdGVyQEhPTk8KcGFzc3dvcmQ9aHR0cC1zZWNyZXQK
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: "eclipse-hono-adapter-http"
+  namespace: "hono"
+  labels:
+    app.kubernetes.io/name: "hono"
+    helm.sh/chart: "hono-2.5.1"
+    app.kubernetes.io/instance: "eclipse-hono"
+    app.kubernetes.io/version: "2.4.0"
+    app.kubernetes.io/component: "adapter-http"
+spec:
+  selector:
+    app.kubernetes.io/name: "hono"
+    app.kubernetes.io/instance: "eclipse-hono"
+    app.kubernetes.io/component: "adapter-http"
+  ports:
+    - name: http
+      port: 8080
+      protocol: TCP
+      targetPort: http
+  type: ClusterIP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: "eclipse-hono-adapter-http"
+  namespace: "hono"
+  labels:
+    app.kubernetes.io/name: "hono"
+    app.kubernetes.io/instance: "eclipse-hono"
+    app.kubernetes.io/version: "2.4.0"
+    app.kubernetes.io/component: "adapter-http"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: "hono"
+      app.kubernetes.io/instance: "eclipse-hono"
+      app.kubernetes.io/component: "adapter-http"
+  template:
+    metadata:
+      name: "eclipse-hono-adapter-http"
+      namespace: "hono"
+      labels:
+        app.kubernetes.io/name: "hono"
+
+        app.kubernetes.io/instance: "eclipse-hono"
+        app.kubernetes.io/version: "2.4.0"
+        app.kubernetes.io/component: "adapter-http"
+
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/path: "/prometheus"
+        prometheus.io/port: "8088"
+        prometheus.io/scheme: "http"
+        kubectl.kubernetes.io/default-container: "adapter-http"
+    spec:
+      containers:
+        - name: "adapter-http"
+          image: "index.docker.io/eclipse/hono-adapter-http:2.4.0"
+          ports:
+            - name: health
+              containerPort: 8088
+              protocol: TCP
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+            - name: https
+              containerPort: 8443
+              protocol: TCP
+          securityContext:
+            privileged: false
+          env:
+            - name: JDK_JAVA_OPTIONS
+              value: "-XX:MinRAMPercentage=80 -XX:MaxRAMPercentage=80"
+            - name: KUBERNETES_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: "QUARKUS_CONFIG_LOCATIONS"
+              value: "/opt/hono/default-logging-config/logging-quarkus-dev.yml"
+          volumeMounts:
+            - name: "tls-keys"
+              mountPath: "/opt/hono/tls/tls.key"
+              subPath: "tls.key"
+              readOnly: true
+            - name: "tls-keys"
+              mountPath: "/opt/hono/tls/tls.crt"
+              subPath: "tls.crt"
+              readOnly: true
+            - name: "tls-trust-store"
+              mountPath: "/opt/hono/tls/ca.crt"
+              subPath: "ca.crt"
+              readOnly: true
+            - name: "default-logging-config"
+              mountPath: "/opt/hono/default-logging-config"
+              readOnly: true
+            - name: "adapter-http-conf"
+              mountPath: "/opt/hono/config"
+              readOnly: true
+          resources:
+            limits:
+              cpu: "1"
+              memory: 512Mi
+            requests:
+              cpu: 150m
+              memory: 300Mi
+          livenessProbe:
+            httpGet:
+              path: /liveness
+              port: health
+              scheme: HTTP
+            periodSeconds: 10
+            failureThreshold: 3
+            initialDelaySeconds: 300
+            successThreshold: 1
+            timeoutSeconds: 3
+          readinessProbe:
+            httpGet:
+              path: /readiness
+              port: health
+              scheme: HTTP
+            periodSeconds: 10
+            failureThreshold: 3
+            initialDelaySeconds: 20
+            successThreshold: 1
+            timeoutSeconds: 3
+      volumes:
+        - name: "tls-keys"
+          secret:
+            secretName: "eclipse-hono-adapter-http-example-keys"
+        - name: "tls-trust-store"
+          configMap:
+            name: "eclipse-hono-example-trust-store"
+        - name: "default-logging-config"
+          configMap:
+            name: "eclipse-hono-default-logging-config"
+            optional: true
+        - name: "adapter-http-conf"
+          secret:
+            secretName: "eclipse-hono-adapter-http-conf"
+---
