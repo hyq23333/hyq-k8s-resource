@@ -1,0 +1,47 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: hono
+  name: hono-kafka-ui
+  labels:
+    app: hono-kafka-ui
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hono-kafka-ui
+  template:
+    metadata:
+      labels:
+        app: hono-kafka-ui
+    spec:
+      containers:
+        - name: kafka-ui
+          image: provectuslabs/kafka-ui
+          ports:
+            - containerPort: 8080
+          env:
+            - name: DYNAMIC_CONFIG_ENABLED
+              value: "true"
+            - name: KAFKA_CLUSTERS_0_NAME
+              value: hono-kafka-broker
+            - name: KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS
+              value: "hono-kafka-broker:9092"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: hono-kafka-ui
+  namespace: hono
+spec:
+  type: NodePort
+  selector:
+    app: hono-kafka-ui
+  ports:
+    - name: kafka-ui-port
+      port: 8080
+      targetPort: 8080
+      nodePort: 30002
+
+

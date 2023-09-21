@@ -1,0 +1,253 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: "eclipse-hono-service-command-router"
+  namespace: "hono"
+  labels:
+    app.kubernetes.io/name: "hono"
+    app.kubernetes.io/instance: "eclipse-hono"
+    app.kubernetes.io/version: "2.4.0"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: "eclipse-hono-service-command-router"
+  namespace: "hono"
+  labels:
+    app.kubernetes.io/name: "hono"
+    app.kubernetes.io/instance: "eclipse-hono"
+    app.kubernetes.io/version: "2.4.0"
+    app.kubernetes.io/component: "service-command-router"
+spec:
+  clusterIP: None
+  ports:
+    - name: amqps
+      port: 5671
+      protocol: TCP
+      targetPort: amqps
+    - name: amqp
+      port: 5672
+      protocol: TCP
+      targetPort: amqp
+  selector:
+    app.kubernetes.io/name: "hono"
+    app.kubernetes.io/instance: "eclipse-hono"
+    app.kubernetes.io/component: "service-command-router"
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: "eclipse-hono-service-command-router-conf"
+  namespace: "hono"
+  labels:
+    app.kubernetes.io/name: "hono"
+    app.kubernetes.io/instance: "eclipse-hono"
+    app.kubernetes.io/version: "2.4.0"
+    app.kubernetes.io/component: "service-command-router"
+type: Opaque
+stringData:
+  dns-cache-config.properties: |
+    networkaddress.cache.negative.ttl=0
+  application.yml: |
+    hono:
+      app:
+        maxInstances: 1
+      auth:
+        host: "eclipse-hono-service-auth.hono"
+        port: 5672
+        hostnameVerificationRequired: false
+        supportedSaslMechanisms: PLAIN
+      commandRouter:
+        amqp:
+          bindAddress: "127.0.0.0"
+          insecurePortBindAddress: "0.0.0.0"
+          insecurePortEnabled: true
+        cache:
+      registration:
+        host: "eclipse-hono-service-device-registry.hono"
+        port: 5672
+        connectTimeout: 10000
+        hostnameVerificationRequired: false
+        tlsEnabled: false
+        credentialsPath: "/opt/hono/config/adapter.credentials"
+      tenant:
+        host: "eclipse-hono-service-device-registry.hono"
+        port: 5672
+        connectTimeout: 10000
+        hostnameVerificationRequired: false
+        tlsEnabled: false
+        credentialsPath: "/opt/hono/config/adapter.credentials"
+      kafka:
+        commonClientConfig:
+          bootstrap.servers: "hono-kafka-broker.hono:9092"
+        
+          
+    quarkus:
+      console:
+        color: false
+      log:
+        min-level: TRACE
+        level: INFO
+        category:
+          "io.quarkus.vertx.core.runtime":
+            level: DEBUG
+      vertx:
+        prefer-native-transport: true
+        resolver:
+          cache-max-time-to-live: 0
+  cache-config.xml: |
+    <?xml version="1.0" encoding="UTF-8"?>
+    <infinispan
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:schemaLocation="urn:infinispan:config:13.0 https://infinispan.org/schemas/infinispan-config-13.0.xsd"
+            xmlns="urn:infinispan:config:13.0">
+    
+      <cache-container default-cache="command-router">
+        <local-cache name="command-router" simple-cache="true">
+          <encoding media-type="application/x-protostream" />
+          <memory max-count="200" storage="OFF_HEAP" when-full="REMOVE"></memory>
+        </local-cache>
+      </cache-container>
+    </infinispan>
+
+data:
+  adapter.credentials: dXNlcm5hbWU9Y29tbWFuZC1yb3V0ZXJASE9OTwpwYXNzd29yZD1jbWQtcm91dGVyLXNlY3JldAo=
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: "eclipse-hono-service-command-router"
+  namespace: "hono"
+  labels:
+    app.kubernetes.io/name: "hono"
+
+    app.kubernetes.io/managed-by: "Helm"
+    app.kubernetes.io/instance: "eclipse-hono"
+    app.kubernetes.io/version: "2.4.0"
+rules:
+  - apiGroups: [""]
+    resources: ["pods"]
+    verbs: ["list", "watch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: "eclipse-hono-service-command-router"
+  namespace: "hono"
+  labels:
+    app.kubernetes.io/name: "hono"
+
+    app.kubernetes.io/managed-by: "Helm"
+    app.kubernetes.io/instance: "eclipse-hono"
+    app.kubernetes.io/version: "2.4.0"
+roleRef:
+  kind: Role
+  name: "eclipse-hono-service-command-router"
+  apiGroup: rbac.authorization.k8s.io
+subjects:
+  - kind: ServiceAccount
+    name: "eclipse-hono-service-command-router"
+    namespace: hono
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: "eclipse-hono-service-command-router"
+  namespace: "hono"
+  labels:
+    app.kubernetes.io/name: "hono"
+    app.kubernetes.io/instance: "eclipse-hono"
+    app.kubernetes.io/version: "2.4.0"
+    app.kubernetes.io/component: "service-command-router"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: "hono"
+      app.kubernetes.io/instance: "eclipse-hono"
+      app.kubernetes.io/component: "service-command-router"
+  template:
+    metadata:
+      name: "eclipse-hono-service-command-router"
+      namespace: "hono"
+      labels:
+        app.kubernetes.io/name: "hono"
+        app.kubernetes.io/instance: "eclipse-hono"
+        app.kubernetes.io/version: "2.4.0"
+        app.kubernetes.io/component: "service-command-router"
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/path: "/prometheus"
+        prometheus.io/port: "8088"
+        prometheus.io/scheme: "http"
+        kubectl.kubernetes.io/default-container: "service-command-router"
+
+    spec:
+      containers:
+        - name: "service-command-router"
+          image: "index.docker.io/eclipse/hono-service-command-router:2.4.0"
+          ports:
+            - name: health
+              containerPort: 8088
+              protocol: TCP
+            - name: amqps
+              containerPort: 5671
+              protocol: TCP
+            - name: amqp
+              containerPort: 5672
+              protocol: TCP
+          securityContext:
+            privileged: false
+          env:
+            - name: JDK_JAVA_OPTIONS
+              value: "-XX:MinRAMPercentage=80 -XX:MaxRAMPercentage=80 -Djava.security.properties=/opt/hono/config/dns-cache-config.properties"
+            - name: KUBERNETES_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: "QUARKUS_CONFIG_LOCATIONS"
+              value: "/opt/hono/default-logging-config/logging-quarkus-dev.yml"
+          volumeMounts:
+            - name: "default-logging-config"
+              mountPath: "/opt/hono/default-logging-config"
+              readOnly: true
+            - name: "service-command-router-conf"
+              mountPath: "/opt/hono/config"
+              readOnly: true
+          resources:
+            limits:
+              cpu: "1"
+              memory: 512Mi
+            requests:
+              cpu: 150m
+              memory: 256Mi
+          livenessProbe:
+            httpGet:
+              path: /liveness
+              port: health
+              scheme: HTTP
+            periodSeconds: 10
+            failureThreshold: 3
+            initialDelaySeconds: 300
+            successThreshold: 1
+            timeoutSeconds: 3
+          readinessProbe:
+            httpGet:
+              path: /readiness
+              port: health
+              scheme: HTTP
+            periodSeconds: 10
+            failureThreshold: 3
+            initialDelaySeconds: 20
+            successThreshold: 1
+            timeoutSeconds: 3
+      volumes:
+        - name: "default-logging-config"
+          configMap:
+            name: "eclipse-hono-default-logging-config"
+            optional: true
+        - name: "service-command-router-conf"
+          secret:
+            secretName: "eclipse-hono-service-command-router-conf"
+      serviceAccountName: "eclipse-hono-service-command-router"
+---

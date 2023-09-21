@@ -1,0 +1,327 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: "eclipse-hono-post-install-device-registry-conf"
+  namespace: "hono"
+  labels:
+    app.kubernetes.io/name: "hono"
+    helm.sh/chart: "hono-2.5.1"
+    app.kubernetes.io/managed-by: "Helm"
+    app.kubernetes.io/instance: "eclipse-hono"
+    app.kubernetes.io/version: "2.4.0"
+    app.kubernetes.io/component: "service-device-registry"
+data:
+  add_example_data_device_registry.sh: |
+    #!/bin/sh
+    #*******************************************************************************
+    # Copyright (c) 2020, 2023 Contributors to the Eclipse Foundation
+    #
+    # See the NOTICE file(s) distributed with this work for additional
+    # information regarding copyright ownership.
+    #
+    # This program and the accompanying materials are made available under the
+    # terms of the Eclipse Public License 2.0 which is available at
+    # http://www.eclipse.org/legal/epl-2.0
+    #
+    # SPDX-License-Identifier: EPL-2.0
+    #*******************************************************************************
+    HTTP_BASE_URL="http://eclipse-hono-service-device-registry:8080/v1"
+    
+    check_status() {
+      EXIT_STATUS=$1
+      HTTP_RESPONSE=$2
+    
+      if [ $EXIT_STATUS -ne 0 ]
+      then
+        echo "Curl command failed [exit-code: $EXIT_STATUS]"
+        exit 1
+      elif [ $HTTP_RESPONSE -ne "201" ] && [ $HTTP_RESPONSE -ne "204" ] && [ $HTTP_RESPONSE -ne "409" ]
+      then
+        echo "Http request failed [http-response: $HTTP_RESPONSE]"
+        exit 1
+      fi
+    }
+    
+    echo "Device Registry Http endpoint base url: [$HTTP_BASE_URL]"
+    
+    add_tenant(){
+      TENANT_ID=$1
+      HTTP_REQUEST_BODY=$2
+    
+      echo "Adding tenant [$TENANT_ID]"
+      HTTP_RESPONSE=$(curl -o /dev/null -sw "%{http_code}" \
+                        -X POST "$HTTP_BASE_URL/tenants/$TENANT_ID" \
+                        --header 'Content-Type: application/json' \
+                        --data-raw "$HTTP_REQUEST_BODY")
+    
+      check_status $? $HTTP_RESPONSE
+    }
+    
+    register_device(){
+      TENANT_ID=$1
+      DEVICE_ID=$2
+      HTTP_REQUEST_BODY=$3
+    
+      echo "Registering device [$TENANT_ID:$DEVICE_ID]"
+      HTTP_RESPONSE=$(curl -o /dev/null -sw "%{http_code}" \
+                      -X POST "$HTTP_BASE_URL/devices/$TENANT_ID/$DEVICE_ID" \
+                      --header 'Content-Type: application/json' \
+                      --data-raw "$HTTP_REQUEST_BODY")
+    
+      check_status $? $HTTP_RESPONSE
+    }
+    
+    
+    add_credentials(){
+      TENANT_ID=$1
+      DEVICE_ID=$2
+      HTTP_REQUEST_BODY=$3
+    
+      echo "Adding credentials [$TENANT_ID:$DEVICE_ID]"
+      HTTP_RESPONSE=$(curl -o /dev/null -sw "%{http_code}" \
+                    -X PUT "$HTTP_BASE_URL/credentials/$TENANT_ID/$DEVICE_ID" \
+                    --header 'Content-Type: application/json' \
+                    --data-raw "$HTTP_REQUEST_BODY")
+    
+      check_status $? $HTTP_RESPONSE
+    }
+    
+    . ./example-tenants.sh
+    . ./example-devices.sh
+    . ./example-credentials.sh
+
+  example-tenants.sh: |
+    
+    #!/bin/sh
+    #*******************************************************************************
+    # Copyright (c) 2020, 2022 Contributors to the Eclipse Foundation
+    #
+    # See the NOTICE file(s) distributed with this work for additional
+    # information regarding copyright ownership.
+    #
+    # This program and the accompanying materials are made available under the
+    # terms of the Eclipse Public License 2.0 which is available at
+    # http://www.eclipse.org/legal/epl-2.0
+    #
+    # SPDX-License-Identifier: EPL-2.0
+    #*******************************************************************************
+    
+    DEFAULT_TENANT_TRUSTED_CA=`cat default_tenant-trusted-ca.json`
+    
+    add_tenant 'DEFAULT_TENANT' \
+              "{
+                  \"enabled\": true,
+                  \"trusted-ca\": [
+    $DEFAULT_TENANT_TRUSTED_CA
+                  ]
+                }"
+    
+    add_tenant 'HTTP_TENANT' \
+              '{
+                  "enabled": true,
+                  "adapters": [
+                    {
+                      "type": "hono-amqp",
+                      "enabled": false,
+                      "device-authentication-required": true
+                    },
+                    {
+                      "type": "hono-coap",
+                      "enabled": false,
+                      "device-authentication-required": true
+                    },
+                    {
+                      "type": "hono-http",
+                      "enabled": true,
+                      "device-authentication-required": true
+                    },
+                    {
+                      "type": "hono-lora",
+                      "enabled": false,
+                      "device-authentication-required": true
+                    },
+                    {
+                      "type": "hono-mqtt",
+                      "enabled": false,
+                      "device-authentication-required": true
+                    }
+                  ]
+                }'
+
+  example-devices.sh: |
+    
+    #!/bin/sh
+    #*******************************************************************************
+    # Copyright (c) 2020 Contributors to the Eclipse Foundation
+    #
+    # See the NOTICE file(s) distributed with this work for additional
+    # information regarding copyright ownership.
+    #
+    # This program and the accompanying materials are made available under the
+    # terms of the Eclipse Public License 2.0 which is available at
+    # http://www.eclipse.org/legal/epl-2.0
+    #
+    # SPDX-License-Identifier: EPL-2.0
+    #*******************************************************************************
+    
+    register_device 'DEFAULT_TENANT' '4711' \
+                    '{
+                        "enabled": true,
+                        "defaults": {
+                            "content-type": "application/vnd.bumlux",
+                            "importance": "high"
+                        }
+                    }'
+    
+    register_device 'DEFAULT_TENANT' '4712' \
+                    '{
+                        "enabled": true,
+                        "via": [
+                            "gw-1"
+                        ]
+                    }'
+    
+    register_device 'DEFAULT_TENANT' 'gw-1' \
+                    '{
+                        "enabled": true
+                    }'
+
+  example-credentials.sh: |
+    
+    #!/bin/sh
+    #*******************************************************************************
+    # Copyright (c) 2020 Contributors to the Eclipse Foundation
+    #
+    # See the NOTICE file(s) distributed with this work for additional
+    # information regarding copyright ownership.
+    #
+    # This program and the accompanying materials are made available under the
+    # terms of the Eclipse Public License 2.0 which is available at
+    # http://www.eclipse.org/legal/epl-2.0
+    #
+    # SPDX-License-Identifier: EPL-2.0
+    #*******************************************************************************
+    
+    add_credentials 'DEFAULT_TENANT' '4711' \
+                    '[
+                      {
+                          "type": "hashed-password",
+                          "auth-id": "sensor1",
+                          "enabled": true,
+                          "secrets": [
+                              {
+                                  "not-before": "2017-05-01T14:00:00+01:00",
+                                  "not-after": "2037-06-01T14:00:00+01:00",
+                                  "hash-function": "bcrypt",
+                                  "comment": "pwd: hono-secret",
+                                  "pwd-hash": "$2a$10$N7UMjhZ2hYx.yuvW9WVXZ.4y33mr6MvnpAsZ8wgLHnkamH2tZ1jD."
+                              }
+                          ]
+                      },
+                      {
+                          "type": "psk",
+                          "auth-id": "sensor1",
+                          "enabled": true,
+                          "secrets": [
+                              {
+                                  "not-before": "2018-01-01T00:00:00+01:00",
+                                  "not-after": "2037-06-01T14:00:00+01:00",
+                                  "comment": "key: hono-secret",
+                                  "key": "aG9uby1zZWNyZXQ="
+                              }
+                          ]
+                      },
+                      {
+                          "type": "x509-cert",
+                          "auth-id": "CN=Device 4711,OU=Hono,O=Eclipse IoT,L=Ottawa,C=CA",
+                          "enabled": true,
+                          "secrets": [
+                              {
+                                  "comment": "The secrets array must contain an object, which can be empty."
+                              }
+                          ]
+                      }]'
+    
+    add_credentials 'DEFAULT_TENANT' 'gw-1' \
+                    '[
+                          {
+                              "type": "hashed-password",
+                              "auth-id": "gw",
+                              "enabled": true,
+                              "secrets": [
+                                  {
+                                      "not-before": "2018-01-01T00:00:00+01:00",
+                                      "not-after": "2037-06-01T14:00:00+01:00",
+                                      "hash-function": "bcrypt",
+                                      "comment": "pwd: gw-secret",
+                                      "pwd-hash": "$2a$10$GMcN0iV9gJV7L1sH6J82Xebc1C7CGJ..Rbs./vcTuTuxPEgS9DOa6"
+                                  }
+                              ]
+                          },
+                          {
+                              "type": "psk",
+                              "auth-id": "gw",
+                              "enabled": true,
+                              "secrets": [
+                                  {
+                                      "not-before": "2018-01-01T00:00:00+01:00",
+                                      "not-after": "2037-06-01T14:00:00+01:00",
+                                      "comment": "key: gw-secret",
+                                      "key": "Z3ctc2VjcmV0"
+                                  }
+                              ]
+                          }
+                  ]'
+
+  default_tenant-trusted-ca.json: |
+    
+    {
+      "subject-dn": "CN=DEFAULT_TENANT_CA,OU=Hono,O=Eclipse IoT,L=Ottawa,C=CA",
+      "public-key": "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEuL3/RNv+etr5zVv1NqoMIIypP9ysh0cVzsf4dKIuo/iNVxhVBMfnqW77DHNK3dhvdmlvRr3ewflSlrJ2ECBjCg==",
+      "algorithm": "EC",
+      "not-before": "2023-06-24T11:06:00+02:00",
+      "not-after": "2024-06-23T11:06:00+02:00"
+    }
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: "eclipse-hono-post-install-device-registry-job"
+  namespace: "hono"
+  labels:
+    app.kubernetes.io/name: "hono"
+    helm.sh/chart: "hono-2.5.1"
+    app.kubernetes.io/managed-by: "Helm"
+    app.kubernetes.io/instance: "eclipse-hono"
+    app.kubernetes.io/version: "2.4.0"
+    app.kubernetes.io/component: "service-device-registry"
+  annotations:
+    # This is what defines this resource as a hook. Without this line, the
+    # job is considered part of the release.
+    helm.sh/hook: post-install
+    helm.sh/hook-weight: "-10"
+    helm.sh/hook-delete-policy: before-hook-creation,hook-succeeded
+spec:
+  template:
+    metadata:
+      name: "eclipse-hono-post-install"
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: "post-install"
+          image: "curlimages/curl:8.2.1"
+          imagePullPolicy: IfNotPresent
+          command:
+            - /bin/sh
+            - -c
+            - |
+              cd /var/run/hono/post-install-data/
+              ./add_example_data_device_registry.sh
+          volumeMounts:
+            - name: post-install-data
+              mountPath: "/var/run/hono/post-install-data"
+      volumes:
+        - name: post-install-data
+          configMap:
+            name: eclipse-hono-post-install-device-registry-conf
+            defaultMode: 0555
