@@ -37,21 +37,6 @@ spec:
 apiVersion: v1
 kind: Secret
 metadata:
-  name: "eclipse-hono-service-command-router-example-keys"
-  namespace: "hono"
-  labels:
-    app.kubernetes.io/name: "hono"
-    app.kubernetes.io/instance: "eclipse-hono"
-    app.kubernetes.io/version: "2.4.0"
-    app.kubernetes.io/component: "service-command-router"
-type: Opaque
-data:
-  tls.key: LS0tLS1CRUdJTiBQUklWQVRFIEtFWS0tLS0tCk1JR0hBZ0VBTUJNR0J5cUdTTTQ5QWdFR0NDcUdTTTQ5QXdFSEJHMHdhd0lCQVFRZ2ZMQ3RKNTJiZGM3WE5sTEMKVkVhamFPM3lmOW91c1hnQy96VTJneUNpd2dtaFJBTkNBQVRham9lem1Bc2R4M09BWDN1c2gxWktNcVEyZUw1Rwpkcm5EZnpnT2NxTnBUMHJvRTFsNXAxQmdmU3oxZkNzRzhnUG0wSStkM2dWa040aFpSYS83R1FXTgotLS0tLUVORCBQUklWQVRFIEtFWS0tLS0tCg==
-  tls.crt: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUNVakNDQWZpZ0F3SUJBZ0lVQjJ2eFdJOXdqMzJPSExhQUJWVitpdVZrZFMwd0NnWUlLb1pJemowRUF3SXcKVURFTE1Ba0dBMVVFQmhNQ1EwRXhEekFOQmdOVkJBY01CazkwZEdGM1lURVVNQklHQTFVRUNnd0xSV05zYVhCegpaU0JKYjFReERUQUxCZ05WQkFzTUJFaHZibTh4Q3pBSkJnTlZCQU1NQW1OaE1CNFhEVEl6TURZeU5EQTVNRFl3Ck1Gb1hEVEkwTURZeU16QTVNRFl3TUZvd1hERUxNQWtHQTFVRUJoTUNRMEV4RHpBTkJnTlZCQWNNQms5MGRHRjMKWVRFVU1CSUdBMVVFQ2d3TFJXTnNhWEJ6WlNCSmIxUXhEVEFMQmdOVkJBc01CRWh2Ym04eEZ6QVZCZ05WQkFNTQpEbU52YlcxaGJtUXRjbTkxZEdWeU1Ga3dFd1lIS29aSXpqMENBUVlJS29aSXpqMERBUWNEUWdBRTJvNkhzNWdMCkhjZHpnRjk3cklkV1NqS2tObmkrUm5hNXczODREbktqYVU5SzZCTlplYWRRWUgwczlYd3JCdklENXRDUG5kNEYKWkRlSVdVV3YreGtGamFPQm96Q0JvREFkQmdOVkhRNEVGZ1FVVDV5QXZoQTlUVWZORUZSZUJnNWhBTCtPeGk4dwpDd1lEVlIwUEJBUURBZ09vTUIwR0ExVWRKUVFXTUJRR0NDc0dBUVVGQndNQkJnZ3JCZ0VGQlFjREFqQlRCZ05WCkhSRUVUREJLZ2h0b2IyNXZMWE5sY25acFkyVXRZMjl0YldGdVpDMXliM1YwWlhLQ0lHaHZibTh0YzJWeWRtbGoKWlMxamIyMXRZVzVrTFhKdmRYUmxjaTVvYjI1dmdnbHNiMk5oYkdodmMzUXdDZ1lJS29aSXpqMEVBd0lEU0FBdwpSUUloQUtNc08yVHB5Qnl2V0JuWTVXTTNrdStuNGFESEM2MXNpSGhObVR2VURodXJBaUJpb3lDUGx3SThveFRzCmZRcDAyelRSa3dCbWIxMHJMRUhaTm1jRkVWcGNWQT09Ci0tLS0tRU5EIENFUlRJRklDQVRFLS0tLS0KLS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUI0ekNDQVltZ0F3SUJBZ0lVRHZmc2V2SHBGN09iUmVBQW1HWFhISHNBWEQwd0NnWUlLb1pJemowRUF3SXcKVWpFTE1Ba0dBMVVFQmhNQ1EwRXhEekFOQmdOVkJBY01CazkwZEdGM1lURVVNQklHQTFVRUNnd0xSV05zYVhCegpaU0JKYjFReERUQUxCZ05WQkFzTUJFaHZibTh4RFRBTEJnTlZCQU1NQkhKdmIzUXdIaGNOTWpNd05qSTBNRGt3Ck5qQXdXaGNOTWpRd05qSXpNRGt3TmpBd1dqQlFNUXN3Q1FZRFZRUUdFd0pEUVRFUE1BMEdBMVVFQnd3R1QzUjAKWVhkaE1SUXdFZ1lEVlFRS0RBdEZZMnhwY0hObElFbHZWREVOTUFzR0ExVUVDd3dFU0c5dWJ6RUxNQWtHQTFVRQpBd3dDWTJFd1dUQVRCZ2NxaGtqT1BRSUJCZ2dxaGtqT1BRTUJCd05DQUFRcGhvVjdaSlpnNzFWUmxkNjZQS2lXCk1IWWF0Zkw3MS94dWdoaFNzSGZlNEdZTkE2aDlwejZRYjBlOWg4S2o2dExURk5UaHZaMEU1MDJveTZlL0E1dHEKb3o4d1BUQWRCZ05WSFE0RUZnUVViQXlSUkNVM1lDcDdacTFUYkdlVy9mYWdxSEV3RHdZRFZSMFRBUUgvQkFVdwpBd0VCL3pBTEJnTlZIUThFQkFNQ0FRWXdDZ1lJS29aSXpqMEVBd0lEU0FBd1JRSWhBSmFxVXU0UVNMSzNwd0NkCk5MbXJLSG9sNmRYcWFLU29GVUtZVmRBU3NGc1JBaUJ2WDhYSElkUmsvQWVrY0RYNEFlakRnMVc1RWJ2UDVyMXQKS2lFc1YxbDFUdz09Ci0tLS0tRU5EIENFUlRJRklDQVRFLS0tLS0K
----
-apiVersion: v1
-kind: Secret
-metadata:
   name: "eclipse-hono-service-command-router-conf"
   namespace: "hono"
   labels:
@@ -223,18 +208,6 @@ spec:
             - name: "QUARKUS_CONFIG_LOCATIONS"
               value: "/opt/hono/default-logging-config/logging-quarkus-dev.yml"
           volumeMounts:
-            - name: "tls-keys"
-              mountPath: "/opt/hono/tls/tls.key"
-              subPath: "tls.key"
-              readOnly: true
-            - name: "tls-keys"
-              mountPath: "/opt/hono/tls/tls.crt"
-              subPath: "tls.crt"
-              readOnly: true
-            - name: "tls-trust-store"
-              mountPath: "/opt/hono/tls/ca.crt"
-              subPath: "ca.crt"
-              readOnly: true
             - name: "default-logging-config"
               mountPath: "/opt/hono/default-logging-config"
               readOnly: true
@@ -269,12 +242,6 @@ spec:
             successThreshold: 1
             timeoutSeconds: 3
       volumes:
-        - name: "tls-keys"
-          secret:
-            secretName: "eclipse-hono-service-command-router-example-keys"
-        - name: "tls-trust-store"
-          configMap:
-            name: "eclipse-hono-example-trust-store"
         - name: "default-logging-config"
           configMap:
             name: "eclipse-hono-default-logging-config"
