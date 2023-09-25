@@ -21,7 +21,7 @@ stringData:
         tenantIdleTimeout: "1h"
       kafka:
         commonClientConfig:
-          bootstrap.servers: "hono-kafka-broker.hono:9092"
+          bootstrap.servers: "172.31.31.152:9092"
         notification:
           consumerConfig:
             compression.type: none
@@ -108,6 +108,27 @@ spec:
       protocol: TCP
       targetPort: http
   type: ClusterIP
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: "eclipse-hono-adapter-http"
+  namespace: "hono"
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: akane.k8s.com
+      http:
+        paths:
+          - pathType: ImplementationSpecific
+            path: /http-adapter(/|$)(.*)
+            backend:
+              service:
+                name: eclipse-hono-adapter-http
+                port:
+                  number: 8080
 ---
 apiVersion: apps/v1
 kind: Deployment

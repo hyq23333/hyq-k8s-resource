@@ -79,7 +79,7 @@ stringData:
         credentialsPath: "/opt/hono/config/adapter.credentials"
       kafka:
         commonClientConfig:
-          bootstrap.servers: "hono-kafka-broker.hono:9092"
+          bootstrap.servers: "172.31.31.152:9092"
         
           
     quarkus:
