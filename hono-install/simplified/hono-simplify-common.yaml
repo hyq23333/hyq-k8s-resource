@@ -5,8 +5,6 @@ metadata:
   namespace: "hono"
   labels:
     app.kubernetes.io/name: "hono"
-    helm.sh/chart: "hono-2.5.1"
-    app.kubernetes.io/managed-by: "Helm"
     app.kubernetes.io/instance: "eclipse-hono"
     app.kubernetes.io/version: "2.4.0"
     app.kubernetes.io/component: "logging"

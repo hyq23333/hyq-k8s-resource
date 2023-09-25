@@ -32,10 +32,10 @@ stringData:
           authenticationRequired: false
       mongodb:
         dbName: hono-device
-        connectionString: mongodb://root:aaa@hono-mongodb-internal.hono
+        connectionString: mongodb://root:aaa1234@172.31.31.152
       kafka:
         commonClientConfig:
-          bootstrap.servers: hono-kafka-broker.hono:9092
+          bootstrap.servers: 172.31.31.152:9092
         event:
           producerConfig:
             compression.type: none
@@ -81,6 +81,27 @@ spec:
     app.kubernetes.io/name: "hono"
     app.kubernetes.io/instance: "eclipse-hono"
     app.kubernetes.io/component: "service-device-registry"
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: "eclipse-hono-service-device-registry"
+  namespace: "hono"
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: akane.k8s.com
+      http:
+        paths:
+          - pathType: ImplementationSpecific
+            path: /device-registry(/|$)(.*)
+            backend:
+              service:
+                name: eclipse-hono-service-device-registry
+                port:
+                  number: 8080
 ---
 apiVersion: apps/v1
 kind: Deployment
